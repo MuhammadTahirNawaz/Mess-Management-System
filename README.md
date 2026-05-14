@@ -6,7 +6,7 @@ A modern Mess Management System built with ASP.NET Core MVC featuring digital ID
 ## System Features
 
 ### 1. Admin Authentication System
-- **Fixed Admin Email**: tahirnawaz12194@gmail.com
+- **Fixed Admin Email**: contact developer for changing the email according your project
 - **OTP-based First Login**: 6-digit OTP sent via Gmail
 - **Password Setup**: First-time users set their password after OTP verification
 - **Secure Login**: Password-based login for subsequent access
