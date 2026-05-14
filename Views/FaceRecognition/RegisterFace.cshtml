@@ -1,0 +1,172 @@
+@{
+    ViewData["Title"] = "Register Face";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-camera-fill me-2"></i>Register Your Face
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-info" role="alert">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        <strong>Instructions:</strong> Position your face in the camera frame and click "Capture" when ready. Make sure your face is clearly visible and well-lit.
+                    </div>
+
+                    <div id="errorAlert" class="alert alert-danger d-none" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <span id="errorMessage"></span>
+                    </div>
+
+                    <div id="successAlert" class="alert alert-success d-none" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        <span id="successMessage"></span>
+                    </div>
+
+                    <div class="text-center mb-4">
+                        <div class="position-relative d-inline-block">
+                            <video id="video" width="640" height="480" autoplay class="border border-3 border-primary rounded"></video>
+                            <canvas id="canvas" width="640" height="480" class="d-none"></canvas>
+                            <div id="faceOverlay" class="position-absolute top-50 start-50 translate-middle">
+                                <div class="border border-3 border-success rounded-circle" style="width: 300px; height: 300px; opacity: 0.5;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-3">
+                        <button id="captureBtn" class="btn btn-primary btn-lg">
+                            <i class="bi bi-camera-fill me-2"></i>Capture Face
+                        </button>
+                        <button id="retryBtn" class="btn btn-warning btn-lg d-none">
+                            <i class="bi bi-arrow-clockwise me-2"></i>Retry
+                        </button>
+                        <a asp-action="Dashboard" asp-controller="Student" class="btn btn-outline-secondary btn-lg">
+                            <i class="bi bi-arrow-left me-2"></i>Back
+                        </a>
+                    </div>
+
+                    <div id="loadingSpinner" class="text-center mt-4 d-none">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Processing your face...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-lightbulb text-warning me-2"></i>Tips for Best Results
+                    </h5>
+                    <ul class="mb-0">
+                        <li>Ensure good lighting - avoid backlighting</li>
+                        <li>Look directly at the camera</li>
+                        <li>Remove glasses or hats if possible</li>
+                        <li>Keep a neutral expression</li>
+                        <li>Make sure your entire face is visible</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureBtn = document.getElementById('captureBtn');
+    const retryBtn = document.getElementById('retryBtn');
+    const errorAlert = document.getElementById('errorAlert');
+    const errorMessage = document.getElementById('errorMessage');
+    const successAlert = document.getElementById('successAlert');
+    const successMessage = document.getElementById('successMessage');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const context = canvas.getContext('2d');
+
+    // Start camera
+    async function startCamera() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { 
+                    width: 640, 
+                    height: 480,
+                    facingMode: 'user'
+                } 
+            });
+            video.srcObject = stream;
+        } catch (err) {
+            showError('Unable to access camera. Please allow camera permissions.');
+            console.error('Camera error:', err);
+        }
+    }
+
+    // Capture and register face
+    captureBtn.addEventListener('click', async () => {
+        hideAlerts();
+        loadingSpinner.classList.remove('d-none');
+        captureBtn.disabled = true;
+
+        // Draw video frame to canvas
+        context.drawImage(video, 0, 0, 640, 480);
+        const imageData = canvas.toDataURL('image/jpeg');
+
+        try {
+            const response = await fetch('/FaceRecognition/RegisterFaceData', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ imageData: imageData })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showSuccess(result.message);
+                captureBtn.classList.add('d-none');
+                retryBtn.classList.add('d-none');
+                setTimeout(() => {
+                    window.location.href = '/Student/Dashboard';
+                }, 2000);
+            } else {
+                showError(result.message);
+                retryBtn.classList.remove('d-none');
+            }
+        } catch (err) {
+            showError('Network error. Please try again.');
+            console.error('Registration error:', err);
+            retryBtn.classList.remove('d-none');
+        } finally {
+            loadingSpinner.classList.add('d-none');
+            captureBtn.disabled = false;
+        }
+    });
+
+    retryBtn.addEventListener('click', () => {
+        hideAlerts();
+        retryBtn.classList.add('d-none');
+    });
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorAlert.classList.remove('d-none');
+    }
+
+    function showSuccess(message) {
+        successMessage.textContent = message;
+        successAlert.classList.remove('d-none');
+    }
+
+    function hideAlerts() {
+        errorAlert.classList.add('d-none');
+        successAlert.classList.add('d-none');
+    }
+
+    // Initialize camera on page load
+    startCamera();
+</script>

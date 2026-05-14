@@ -1,0 +1,52 @@
+<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .gear-blue { fill: #1B3A7D; }
+      .gear-yellow { fill: #FFD700; }
+      .gear-border { fill: #FFD700; stroke: #1B3A7D; stroke-width: 3; }
+      .text-white { fill: white; font-family: Arial, sans-serif; font-weight: bold; }
+      .text-urdu { fill: #333; font-family: 'Noto Nastaliq Urdu', serif; font-size: 12px; }
+      .water-blue { fill: #4FC3F7; }
+    </style>
+  </defs>
+  
+  <!-- Outer gear shape -->
+  <path class="gear-border" d="M150,10 L165,30 L185,25 L190,45 L210,50 L205,70 L220,85 L205,100 L210,120 L190,125 L185,145 L165,140 L150,160 L135,140 L115,145 L110,125 L90,120 L95,100 L80,85 L95,70 L90,50 L110,45 L115,25 L135,30 Z"/>
+  
+  <!-- Inner gear blue circle -->
+  <circle class="gear-blue" cx="150" cy="150" r="115"/>
+  
+  <!-- Yellow inner circle -->
+  <circle class="gear-yellow" cx="150" cy="150" r="75"/>
+  
+  <!-- Book -->
+  <rect x="120" y="125" width="60" height="45" fill="white" rx="2"/>
+  <line x1="150" y1="125" x2="150" y2="170" stroke="#1B3A7D" stroke-width="2"/>
+  <line x1="125" y1="135" x2="145" y2="135" stroke="#666" stroke-width="1.5"/>
+  <line x1="155" y1="135" x2="175" y2="135" stroke="#666" stroke-width="1.5"/>
+  <line x1="125" y1="145" x2="145" y2="145" stroke="#999" stroke-width="1"/>
+  <line x1="155" y1="145" x2="175" y2="145" stroke="#999" stroke-width="1"/>
+  <line x1="125" y1="150" x2="145" y2="150" stroke="#999" stroke-width="1"/>
+  <line x1="155" y1="150" x2="175" y2="150" stroke="#999" stroke-width="1"/>
+  <text x="133" y="142" class="text-urdu">قرآن پڑھیں</text>
+  
+  <!-- Water waves below book -->
+  <path class="water-blue" d="M 115,175 Q 125,172 135,175 Q 145,178 155,175 Q 165,172 175,175 Q 185,178 190,175" fill="none" stroke="#4FC3F7" stroke-width="3"/>
+  <path class="water-blue" d="M 115,182 Q 125,179 135,182 Q 145,185 155,182 Q 165,179 175,182 Q 185,185 190,182" fill="none" stroke="#4FC3F7" stroke-width="3"/>
+  <path class="water-blue" d="M 115,189 Q 125,186 135,189 Q 145,192 155,189 Q 165,186 175,189 Q 185,192 190,189" fill="none" stroke="#4FC3F7" stroke-width="3"/>
+  
+  <!-- Text around circle -->
+  <path id="circlePath1" d="M 50,150 A 100,100 0 0,1 250,150" fill="none"/>
+  <text class="text-white" font-size="20">
+    <textPath href="#circlePath1" startOffset="5%">
+      UNIVERSITY OF ENGINEERING AND
+    </textPath>
+  </text>
+  
+  <path id="circlePath2" d="M 250,150 A 100,100 0 0,1 50,150" fill="none"/>
+  <text class="text-white" font-size="20">
+    <textPath href="#circlePath2" startOffset="8%">
+      TECHNOLOGY - LAHORE
+    </textPath>
+  </text>
+</svg>

@@ -1,0 +1,671 @@
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\Mess management system\Semester Project
+[SESSION WARNING] No active session for path: /
+[SESSION WARNING] No active session for path: /Student
+[SESSION WARNING] No active session for path: /Student
+warn: Microsoft.EntityFrameworkCore.Model.Validation[30000]
+      No store type was specified for the decimal property 'Amount' on entity type 'MonthlyCharge'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+warn: Microsoft.EntityFrameworkCore.Model.Validation[30000]
+      No store type was specified for the decimal property 'FineAmount' on entity type 'PaymentDeadline'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (73ms) [Parameters=[@__email_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__email_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (6ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SET IMPLICIT_TRANSACTIONS OFF;
+      SET NOCOUNT ON;
+      UPDATE [Students] SET [LastLoginAt] = @p0
+      OUTPUT 1
+      WHERE [Id] = @p1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM([a].[Amount]), 0.0)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM([a].[Amount]), 0.0)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM([a].[Amount]), 0.0)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM([a].[Amount]), 0.0)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM([a].[Amount]), 0.0)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM([a].[Amount]), 0.0)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [m].[Id], [m].[CreatedAt], [m].[DayOfWeek], [m].[Description], [m].[IsActive], [m].[ItemName], [m].[MealType], [m].[Price], [m].[UpdatedAt]
+      FROM [MenuItems] AS [m]
+      WHERE [m].[IsActive] = CAST(1 AS bit) AND [m].[MealType] = N'Breakfast'
+      ORDER BY [m].[DayOfWeek], [m].[MealType]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM([a].[Amount]), 0.0)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT [a].[Id], [a].[Amount], [a].[CreatedAt], [a].[Date], [a].[IsPaid], [a].[MealType], [a].[PaidAt], [a].[StudentId]
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0
+      ORDER BY [a].[Date] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM([a].[Amount]), 0.0)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__email_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__email_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__student_Id_0='?' (DbType = Int32), @__startDate_1='?' (DbType = DateTime2), @__endDate_2='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [a].[Id], [a].[Amount], [a].[CreatedAt], [a].[Date], [a].[IsPaid], [a].[MealType], [a].[PaidAt], [a].[StudentId]
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[Date] >= @__startDate_1 AND [a].[Date] <= @__endDate_2
+      ORDER BY [a].[Date], [a].[MealType]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [m].[Id], [m].[CreatedAt], [m].[DayOfWeek], [m].[Description], [m].[IsActive], [m].[ItemName], [m].[MealType], [m].[Price], [m].[UpdatedAt]
+      FROM [MenuItems] AS [m]
+      WHERE [m].[IsActive] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM([a].[Amount]), 0.0)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT [a].[Id], [a].[Amount], [a].[CreatedAt], [a].[Date], [a].[IsPaid], [a].[MealType], [a].[PaidAt], [a].[StudentId]
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0
+      ORDER BY [a].[Date] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM([a].[Amount]), 0.0)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[Id], [t].[CreatedAt], [t].[CurrentCheckInOTP], [t].[Email], [t].[FaceEncoding], [t].[FaceRegisteredAt], [t].[IsFaceRegistered], [t].[IsFirstTimeLogin], [t].[IsVerified], [t].[LastLoginAt], [t].[MembershipType], [t].[Name], [t].[OTPGeneratedAt], [t].[PasswordHash], [t].[PermanentID], [t].[QRCodeSecret], [a].[Id], [a].[Amount], [a].[CreatedAt], [a].[Date], [a].[IsPaid], [a].[MealType], [a].[PaidAt], [a].[StudentId]
+      FROM (
+          SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+          FROM [Students] AS [s]
+          WHERE [s].[Email] = @__studentEmail_0
+      ) AS [t]
+      LEFT JOIN [Attendances] AS [a] ON [t].[Id] = [a].[StudentId]
+      ORDER BY [t].[Id]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (6ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM([a].[Amount]), 0.0)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (12ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (5ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT [p].[Id], [p].[Amount], [p].[AttendanceIds], [p].[CardBrand], [p].[CardLast4], [p].[CreatedAt], [p].[Description], [p].[ErrorMessage], [p].[PaidAt], [p].[PaymentStatus], [p].[StripePaymentIntentId], [p].[StudentId]
+      FROM [Payments] AS [p]
+      WHERE [p].[StudentId] = @__student_Id_0
+      ORDER BY [p].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (6ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Id], [c].[AdminResponse], [c].[CreatedAt], [c].[Description], [c].[ResolvedAt], [c].[Status], [c].[StudentId], [c].[Subject]
+      FROM [Complaints] AS [c]
+      WHERE [c].[StudentId] = @__student_Id_0
+      ORDER BY [c].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM([a].[Amount]), 0.0)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT [b].[Id], [b].[AdminResponse], [b].[Month], [b].[RequestMessage], [b].[RequestedAt], [b].[ReviewedAt], [b].[Status], [b].[StudentId], [b].[Year]
+      FROM [BillRecheckRequests] AS [b]
+      WHERE [b].[StudentId] = @__student_Id_0
+      ORDER BY [b].[RequestedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__studentEmail_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Email] = @__studentEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__student_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM([a].[Amount]), 0.0)
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__student_Id_0 AND [a].[IsPaid] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__email_0='?' (Size = 255)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [u].[Id], [u].[CreatedAt], [u].[CurrentOTP], [u].[Email], [u].[IsFirstTimeLogin], [u].[IsVerified], [u].[LastLoginAt], [u].[Name], [u].[OTPGeneratedAt], [u].[PasswordHash]
+      FROM [Users] AS [u]
+      WHERE [u].[Email] = @__email_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Students] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Students] AS [s]
+      WHERE [s].[IsVerified] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM (
+          SELECT DISTINCT [a].[StudentId]
+          FROM [Attendances] AS [a]
+          WHERE CONVERT(date, [a].[Date]) = CONVERT(date, GETDATE())
+      ) AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM (
+          SELECT DISTINCT [a].[StudentId]
+          FROM [Attendances] AS [a]
+          WHERE [a].[IsPaid] = CAST(0 AS bit)
+      ) AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [m].[Id], [m].[CreatedAt], [m].[DayOfWeek], [m].[Description], [m].[IsActive], [m].[ItemName], [m].[MealType], [m].[Price], [m].[UpdatedAt]
+      FROM [MenuItems] AS [m]
+      ORDER BY [m].[DayOfWeek], [m].[MealType]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Students] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Students] AS [s]
+      WHERE [s].[IsVerified] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM (
+          SELECT DISTINCT [a].[StudentId]
+          FROM [Attendances] AS [a]
+          WHERE CONVERT(date, [a].[Date]) = CONVERT(date, GETDATE())
+      ) AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM (
+          SELECT DISTINCT [a].[StudentId]
+          FROM [Attendances] AS [a]
+          WHERE [a].[IsPaid] = CAST(0 AS bit)
+      ) AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      ORDER BY [s].[Name]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Students] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Students] AS [s]
+      WHERE [s].[IsVerified] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM (
+          SELECT DISTINCT [a].[StudentId]
+          FROM [Attendances] AS [a]
+          WHERE CONVERT(date, [a].[Date]) = CONVERT(date, GETDATE())
+      ) AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM (
+          SELECT DISTINCT [a].[StudentId]
+          FROM [Attendances] AS [a]
+          WHERE [a].[IsPaid] = CAST(0 AS bit)
+      ) AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Students] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Students] AS [s]
+      WHERE [s].[IsVerified] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM (
+          SELECT DISTINCT [a].[StudentId]
+          FROM [Attendances] AS [a]
+          WHERE CONVERT(date, [a].[Date]) = CONVERT(date, GETDATE())
+      ) AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM (
+          SELECT DISTINCT [a].[StudentId]
+          FROM [Attendances] AS [a]
+          WHERE [a].[IsPaid] = CAST(0 AS bit)
+      ) AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (16ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id] AS [StudentId], [s].[Name] AS [StudentName], [s].[Email] AS [StudentEmail], [s].[PermanentID], COALESCE((
+          SELECT COALESCE(SUM([a1].[Amount]), 0.0)
+          FROM [Attendances] AS [a1]
+          WHERE [a1].[StudentId] = [s].[Id] AND [a1].[IsPaid] = CAST(0 AS bit)), 0.0) AS [TotalAmount], (
+          SELECT COUNT(*)
+          FROM [Attendances] AS [a2]
+          WHERE [a2].[StudentId] = [s].[Id] AND [a2].[IsPaid] = CAST(0 AS bit)) AS [TotalMeals]
+      FROM [Students] AS [s]
+      WHERE COALESCE((
+          SELECT COALESCE(SUM([a].[Amount]), 0.0)
+          FROM [Attendances] AS [a]
+          WHERE [a].[StudentId] = [s].[Id] AND [a].[IsPaid] = CAST(0 AS bit)), 0.0) > 0.0
+      ORDER BY COALESCE((
+          SELECT COALESCE(SUM([a0].[Amount]), 0.0)
+          FROM [Attendances] AS [a0]
+          WHERE [a0].[StudentId] = [s].[Id] AND [a0].[IsPaid] = CAST(0 AS bit)), 0.0) DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Students] AS [s]
+      WHERE [s].[Id] = @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT [a].[Id], [a].[Amount], [a].[CreatedAt], [a].[Date], [a].[IsPaid], [a].[MealType], [a].[PaidAt], [a].[StudentId]
+      FROM [Attendances] AS [a]
+      WHERE [a].[StudentId] = @__id_0
+      ORDER BY [a].[Date] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id] AS [StudentId], [s].[Name] AS [StudentName], [s].[Email] AS [StudentEmail], [s].[PermanentID], COALESCE((
+          SELECT COALESCE(SUM([a1].[Amount]), 0.0)
+          FROM [Attendances] AS [a1]
+          WHERE [a1].[StudentId] = [s].[Id] AND [a1].[IsPaid] = CAST(0 AS bit)), 0.0) AS [TotalAmount], (
+          SELECT COUNT(*)
+          FROM [Attendances] AS [a2]
+          WHERE [a2].[StudentId] = [s].[Id] AND [a2].[IsPaid] = CAST(0 AS bit)) AS [TotalMeals]
+      FROM [Students] AS [s]
+      WHERE COALESCE((
+          SELECT COALESCE(SUM([a].[Amount]), 0.0)
+          FROM [Attendances] AS [a]
+          WHERE [a].[StudentId] = [s].[Id] AND [a].[IsPaid] = CAST(0 AS bit)), 0.0) > 0.0
+      ORDER BY COALESCE((
+          SELECT COALESCE(SUM([a0].[Amount]), 0.0)
+          FROM [Attendances] AS [a0]
+          WHERE [a0].[StudentId] = [s].[Id] AND [a0].[IsPaid] = CAST(0 AS bit)), 0.0) DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Students] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Students] AS [s]
+      WHERE [s].[IsVerified] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM (
+          SELECT DISTINCT [a].[StudentId]
+          FROM [Attendances] AS [a]
+          WHERE CONVERT(date, [a].[Date]) = CONVERT(date, GETDATE())
+      ) AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM (
+          SELECT DISTINCT [a].[StudentId]
+          FROM [Attendances] AS [a]
+          WHERE [a].[IsPaid] = CAST(0 AS bit)
+      ) AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Id], [c].[AdminResponse], [c].[CreatedAt], [c].[Description], [c].[ResolvedAt], [c].[Status], [c].[StudentId], [c].[Subject], [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Complaints] AS [c]
+      INNER JOIN [Students] AS [s] ON [c].[StudentId] = [s].[Id]
+      ORDER BY [c].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [c].[Id], [c].[AdminResponse], [c].[CreatedAt], [c].[Description], [c].[ResolvedAt], [c].[Status], [c].[StudentId], [c].[Subject]
+      FROM [Complaints] AS [c]
+      WHERE [c].[Id] = @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+      SET IMPLICIT_TRANSACTIONS OFF;
+      SET NOCOUNT ON;
+      UPDATE [Complaints] SET [AdminResponse] = @p0
+      OUTPUT 1
+      WHERE [Id] = @p1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Id], [c].[AdminResponse], [c].[CreatedAt], [c].[Description], [c].[ResolvedAt], [c].[Status], [c].[StudentId], [c].[Subject], [s].[Id], [s].[CreatedAt], [s].[CurrentCheckInOTP], [s].[Email], [s].[FaceEncoding], [s].[FaceRegisteredAt], [s].[IsFaceRegistered], [s].[IsFirstTimeLogin], [s].[IsVerified], [s].[LastLoginAt], [s].[MembershipType], [s].[Name], [s].[OTPGeneratedAt], [s].[PasswordHash], [s].[PermanentID], [s].[QRCodeSecret]
+      FROM [Complaints] AS [c]
+      INNER JOIN [Students] AS [s] ON [c].[StudentId] = [s].[Id]
+      ORDER BY [c].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Students] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Students] AS [s]
+      WHERE [s].[IsVerified] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM (
+          SELECT DISTINCT [a].[StudentId]
+          FROM [Attendances] AS [a]
+          WHERE CONVERT(date, [a].[Date]) = CONVERT(date, GETDATE())
+      ) AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM (
+          SELECT DISTINCT [a].[StudentId]
+          FROM [Attendances] AS [a]
+          WHERE [a].[IsPaid] = CAST(0 AS bit)
+      ) AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [a].[Id], [a].[Content], [a].[CreatedAt], [a].[CreatedByUserId], [a].[ExpiresAt], [a].[IsActive], [a].[Priority], [a].[Title], [a].[VisibleFrom], [a].[VisibleTo]
+      FROM [Announcements] AS [a]
+      ORDER BY [a].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Students] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Students] AS [s]
+      WHERE [s].[IsVerified] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM (
+          SELECT DISTINCT [a].[StudentId]
+          FROM [Attendances] AS [a]
+          WHERE CONVERT(date, [a].[Date]) = CONVERT(date, GETDATE())
+      ) AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM (
+          SELECT DISTINCT [a].[StudentId]
+          FROM [Attendances] AS [a]
+          WHERE [a].[IsPaid] = CAST(0 AS bit)
+      ) AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Students] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Students] A

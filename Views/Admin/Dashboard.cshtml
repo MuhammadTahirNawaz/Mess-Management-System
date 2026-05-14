@@ -1,0 +1,481 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<style>
+    body { overflow-x: hidden; }
+    
+    /* Sidebar Styles */
+    .sidebar {
+        position: fixed;
+        top: 56px;
+        left: 0;
+        height: calc(100vh - 56px);
+        width: 280px;
+        background: linear-gradient(180deg, #2d3748 0%, #1a202c 100%);
+        color: white;
+        overflow-y: auto;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .sidebar::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .sidebar::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.2);
+        border-radius: 3px;
+    }
+    
+    .sidebar-header {
+        padding: 1.5rem;
+        background: rgba(0,0,0,0.2);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .sidebar-menu {
+        padding: 1rem 0;
+    }
+    
+    .sidebar-menu-item {
+        padding: 0.8rem 1.5rem;
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+    }
+    
+    .sidebar-menu-item:hover {
+        background: rgba(255,255,255,0.1);
+        color: white;
+        border-left-color: #667eea;
+    }
+    
+    .sidebar-menu-item i {
+        margin-right: 1rem;
+        font-size: 1.2rem;
+        width: 25px;
+        text-align: center;
+    }
+    
+    .sidebar-menu-section {
+        padding: 0.5rem 1.5rem;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: rgba(255,255,255,0.5);
+        margin-top: 1rem;
+    }
+    
+    /* Main Content with Sidebar */
+    .main-content {
+        margin-left: 280px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+    }
+    
+    .icon-box {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    
+    .hover-lift {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    }
+    
+    /* Statistics Cards */
+    .stat-card {
+        border-radius: 15px;
+        padding: 1.5rem;
+        color: white;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        margin-bottom: 1.5rem;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    
+    .stat-card.green {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    }
+    .stat-card.orange {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    .stat-card.blue {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+    .stat-card.red {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    }
+    
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin: 0;
+    }
+    
+    .stat-label {
+        font-size: 1rem;
+        opacity: 0.9;
+        margin-top: 0.5rem;
+    }
+    
+    .stat-icon {
+        font-size: 2.5rem;
+        opacity: 0.3;
+        position: absolute;
+        right: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    
+    /* Welcome Card */
+    .welcome-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    /* Toggle Button for Mobile */
+    .sidebar-toggle {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        z-index: 1001;
+    }
+    
+    @@media (max-width: 992px) {
+        .sidebar {
+            left: -280px;
+        }
+        
+        .sidebar.active {
+            left: 0;
+        }
+        
+        .main-content {
+            margin-left: 0;
+        }
+        
+        .sidebar-toggle {
+            display: block;
+        }
+    }
+</style>
+
+<div class="container-fluid mt-4">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="mb-2"><i class="bi bi-speedometer2 me-2"></i>Admin Dashboard</h1>
+                <p class="mb-0 opacity-75">Mess Management System - Control Panel</p>
+            </div>
+            <div>
+                <span class="badge bg-light text-dark px-3 py-2" style="font-size: 1rem;">
+                    <i class="bi bi-clock me-2"></i>@DateTime.Now.ToString("MMM dd, yyyy")
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card green position-relative">
+                <div class="stat-number">@ViewBag.TotalStudents</div>
+                <div class="stat-label">Total Students</div>
+                <i class="bi bi-people stat-icon"></i>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card orange position-relative">
+                <div class="stat-number">@ViewBag.ActiveStudents</div>
+                <div class="stat-label">Active Students</div>
+                <i class="bi bi-person-check stat-icon"></i>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card blue position-relative">
+                <div class="stat-number">@ViewBag.TodayCheckIns</div>
+                <div class="stat-label">Today's Check-Ins</div>
+                <i class="bi bi-clipboard-check stat-icon"></i>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card red position-relative">
+                <div class="stat-number">@ViewBag.PendingBills</div>
+                <div class="stat-label">Pending Bills</div>
+                <i class="bi bi-receipt stat-icon"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <h4 class="mb-4"><i class="bi bi-lightning-charge me-2 text-primary"></i>Quick Actions</h4>
+
+    <div class="row g-4">
+        <!-- Menu Management Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="action-card card">
+                <div class="card-body text-center">
+                    <div class="action-icon icon-primary">
+                        <i class="bi bi-card-list"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Menu Management</h5>
+                    <p class="card-text text-muted small">Add, update, and manage daily mess menu items with prices</p>
+                    <a asp-controller="AdminMenu" asp-action="MenuManagement" class="btn btn-primary btn-sm w-100">
+                        <i class="bi bi-arrow-right-circle me-1"></i>Manage Menu
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Students Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="action-card card">
+                <div class="card-body text-center">
+                    <div class="action-icon icon-success">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Registered Students</h5>
+                    <p class="card-text text-muted small">View all registered students and their details</p>
+                    <a asp-controller="AdminMenu" asp-action="ViewStudents" class="btn btn-success btn-sm w-100">
+                        <i class="bi bi-arrow-right-circle me-1"></i>View Students
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Check-In Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="action-card card">
+                <div class="card-body text-center">
+                    <div class="action-icon icon-warning">
+                        <i class="bi bi-qr-code-scan"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Student Check-In</h5>
+                    <p class="card-text text-muted small">Scan QR code or enter ID for quick meal check-in</p>
+                    <a asp-controller="AdminMenu" asp-action="CheckIn" class="btn btn-warning btn-sm w-100 text-white">
+                        <i class="bi bi-arrow-right-circle me-1"></i>Check-In
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Bills Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="action-card card">
+                <div class="card-body text-center">
+                    <div class="action-icon icon-danger">
+                        <i class="bi bi-receipt"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Student Bills</h5>
+                    <p class="card-text text-muted small">View unpaid bills and attendance history</p>
+                    <a asp-controller="AdminMenu" asp-action="ViewBills" class="btn btn-danger btn-sm w-100">
+                        <i class="bi bi-arrow-right-circle me-1"></i>View Bills
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complaints Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="action-card card">
+                <div class="card-body text-center">
+                    <div class="action-icon icon-info">
+                        <i class="bi bi-chat-left-text"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Complaints</h5>
+                    <p class="card-text text-muted small">Manage and respond to student complaints</p>
+                    <a asp-controller="AdminMenu" asp-action="ManageComplaints" class="btn btn-info btn-sm w-100 text-white">
+                        <i class="bi bi-arrow-right-circle me-1"></i>Manage Complaints
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Announcements Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="action-card card">
+                <div class="card-body text-center">
+                    <div class="action-icon icon-primary">
+                        <i class="bi bi-megaphone"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Announcements</h5>
+                    <p class="card-text text-muted small">Create and manage system announcements</p>
+                    <a asp-controller="AdminMenu" asp-action="ManageAnnouncements" class="btn btn-primary btn-sm w-100">
+                        <i class="bi bi-arrow-right-circle me-1"></i>Manage Announcements
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Face Scanner Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="action-card card border-success">
+                <div class="card-body text-center">
+                    <div class="action-icon icon-success">
+                        <i class="bi bi-camera-video-fill"></i>
+                    </div>
+                    <h5 class="card-title fw-bold text-success">Face Scanner</h5>
+                    <p class="card-text text-muted small">Mark attendance via face recognition</p>
+                    <a asp-controller="FaceRecognition" asp-action="AdminScan" class="btn btn-success btn-sm w-100">
+                        <i class="bi bi-arrow-right-circle me-1"></i>Open Scanner
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clear Test Data Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="action-card card border-danger">
+                <div class="card-body text-center">
+                    <div class="action-icon icon-danger">
+                        <i class="bi bi-trash3-fill"></i>
+                    </div>
+                    <h5 class="card-title fw-bold text-danger">Clear Test Data</h5>
+                    <p class="card-text text-muted small">Clear all face registrations & attendance</p>
+                    <button onclick="confirmClearData()" class="btn btn-danger btn-sm w-100">
+                        <i class="bi bi-x-circle me-1"></i>Clear Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-2">
+        <!-- Monthly Charges Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="action-card card">
+                <div class="card-body text-center">
+                    <div class="action-icon icon-warning">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Monthly Charges</h5>
+                    <p class="card-text text-muted small">Manage gas, service & other charges</p>
+                    <a asp-controller="Charges" asp-action="ManageCharges" class="btn btn-warning btn-sm w-100 text-white">
+                        <i class="bi bi-arrow-right-circle me-1"></i>Manage Charges
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Deadlines Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="action-card card">
+                <div class="card-body text-center">
+                    <div class="action-icon icon-danger">
+                        <i class="bi bi-calendar-x"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Payment Deadlines</h5>
+                    <p class="card-text text-muted small">Set deadlines & late payment fines</p>
+                    <a asp-controller="Charges" asp-action="ManageDeadlines" class="btn btn-danger btn-sm w-100">
+                        <i class="bi bi-arrow-right-circle me-1"></i>Set Deadlines
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bill Recheck Requests Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="action-card card">
+                <div class="card-body text-center">
+                    <div class="action-icon icon-info">
+                        <i class="bi bi-search"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Bill Rechecks</h5>
+                    <p class="card-text text-muted small">Review student recheck requests</p>
+                    <a asp-controller="Charges" asp-action="BillRecheckRequests" class="btn btn-info btn-sm w-100 text-white">
+                        <i class="bi bi-arrow-right-circle me-1"></i>View Requests
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>System Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Admin Email:</strong> @Context.Session.GetString("AdminEmail")</p>
+                    <p><strong>Last Login:</strong> @DateTime.Now.ToString("dd MMM yyyy, hh:mm tt")</p>
+                    <p class="mb-0"><strong>System Status:</strong> <span class="badge bg-success">Active</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function confirmClearData() {
+            if (confirm('⚠️ WARNING: This will permanently delete:\n\n• All student face registrations\n• All attendance records (QR & Face)\n\nThis action cannot be undone!\n\nAre you sure you want to continue?')) {
+                // Show loading
+                const btn = event.target.closest('button');
+                const originalText = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Clearing...';
+
+                // Send AJAX request
+                fetch('/Admin/ClearTestData', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('✅ ' + data.message);
+                        location.reload();
+                    } else {
+                        alert('❌ ' + data.message);
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+                    }
+                })
+                .catch(error => {
+                    alert('❌ Error: ' + error.message);
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                });
+            }
+        }
+    </script>
+}

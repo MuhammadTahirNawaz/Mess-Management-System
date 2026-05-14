@@ -1,0 +1,242 @@
+@{
+    ViewData["Title"] = "Student Dashboard";
+}
+
+<style>
+    body { overflow-x: hidden; }
+    
+    /* Sidebar Styles */
+    .sidebar {
+        position: fixed;
+        top: 56px;
+        left: 0;
+        height: calc(100vh - 56px);
+        width: 280px;
+        background: linear-gradient(180deg, #2d3748 0%, #1a202c 100%);
+        color: white;
+        overflow-y: auto;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .sidebar::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .sidebar::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.2);
+        border-radius: 3px;
+    }
+    
+    .sidebar-header {
+        padding: 1.5rem;
+        background: rgba(0,0,0,0.2);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .sidebar-menu {
+        padding: 1rem 0;
+    }
+    
+    .sidebar-menu-item {
+        padding: 0.8rem 1.5rem;
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+    }
+    
+    .sidebar-menu-item:hover {
+        background: rgba(255,255,255,0.1);
+        color: white;
+        border-left-color: #667eea;
+    }
+    
+    .sidebar-menu-item.active {
+        background: rgba(255,255,255,0.15);
+        color: white;
+        border-left-color: #667eea;
+    }
+    
+    .sidebar-menu-item i {
+        margin-right: 1rem;
+        font-size: 1.2rem;
+        width: 25px;
+        text-align: center;
+    }
+    
+    .sidebar-menu-section {
+        padding: 0.5rem 1.5rem;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: rgba(255,255,255,0.5);
+        margin-top: 1rem;
+    }
+    
+    /* Main Content with Sidebar */
+    .main-content {
+        margin-left: 280px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+    }
+    
+    /* Welcome Card */
+    .welcome-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    /* Toggle Button for Mobile */
+    .sidebar-toggle {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        z-index: 1001;
+    }
+    
+    @@media (max-width: 992px) {
+        .sidebar {
+            left: -280px;
+        }
+        
+        .sidebar.active {
+            left: 0;
+        }
+        
+        .main-content {
+            margin-left: 0;
+        }
+        
+        .sidebar-toggle {
+            display: block;
+        }
+    }
+</style>
+
+<!-- Sidebar -->
+<div class="sidebar" id="studentSidebar">
+    <div class="sidebar-header">
+        <h5 class="mb-1"><i class="bi bi-person-circle me-2"></i>Student Panel</h5>
+        <small class="text-white-50">@ViewBag.StudentName</small>
+    </div>
+    
+    <div class="sidebar-menu">
+        <div class="sidebar-menu-section">Main Menu</div>
+        <a asp-controller="Student" asp-action="Dashboard" class="sidebar-menu-item active">
+            <i class="bi bi-house-door"></i>
+            <span>Dashboard</span>
+        </a>
+        
+        <div class="sidebar-menu-section">My Account</div>
+        <a asp-action="DigitalCard" asp-controller="Student" class="sidebar-menu-item">
+            <i class="bi bi-credit-card-2-front"></i>
+            <span>Digital ID Card</span>
+        </a>
+        <a asp-action="MyProfile" asp-controller="Student" class="sidebar-menu-item">
+            <i class="bi bi-person-circle"></i>
+            <span>My Profile</span>
+        </a>
+        <a asp-action="ChangePassword" asp-controller="Student" class="sidebar-menu-item">
+            <i class="bi bi-lock-fill"></i>
+            <span>Change Password</span>
+        </a>
+        
+        <div class="sidebar-menu-section">Services</div>
+        <a asp-action="RegisterFace" asp-controller="FaceRecognition" class="sidebar-menu-item">
+            <i class="bi bi-camera-fill"></i>
+            <span>Face Recognition</span>
+        </a>
+        <a asp-action="ViewMenu" asp-controller="Student" class="sidebar-menu-item">
+            <i class="bi bi-calendar-week"></i>
+            <span>Mess Menu</span>
+        </a>
+        <a asp-action="MyAttendance" asp-controller="Student" class="sidebar-menu-item">
+            <i class="bi bi-clipboard-check"></i>
+            <span>My Attendance</span>
+        </a>
+        
+        <div class="sidebar-menu-section">Billing</div>
+        <a asp-action="ViewBill" asp-controller="Student" class="sidebar-menu-item">
+            <i class="bi bi-receipt"></i>
+            <span>My Bills</span>
+        </a>
+        <a asp-action="Checkout" asp-controller="Payment" class="sidebar-menu-item">
+            <i class="bi bi-credit-card"></i>
+            <span>Pay Bills</span>
+        </a>
+        <a asp-action="PaymentHistory" asp-controller="Student" class="sidebar-menu-item">
+            <i class="bi bi-clock-history"></i>
+            <span>Payment History</span>
+        </a>
+        
+        <div class="sidebar-menu-section">Support</div>
+        <a asp-action="SubmitComplaint" asp-controller="Student" class="sidebar-menu-item">
+            <i class="bi bi-pencil-square"></i>
+            <span>Feedback & Complaints</span>
+        </a>
+        
+        <div class="sidebar-menu-section">Account</div>
+        <a asp-action="Logout" asp-controller="Student" class="sidebar-menu-item text-danger">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Logout</span>
+        </a>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Success Message -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Welcome Card -->
+    <div class="welcome-card">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <h2 class="mb-2">Welcome, @ViewBag.StudentName!</h2>
+                <p class="mb-0 opacity-75">Access all your mess services from here</p>
+            </div>
+            <div class="mt-3 mt-md-0">
+                <span class="badge bg-light text-dark px-3 py-2" style="font-size: 1rem;">
+                    <i class="bi bi-clock me-2"></i>@DateTime.Now.ToString("MMM dd, yyyy")
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Announcement Slider -->
+    <partial name="_AnnouncementSlider" />
+</div>
+
+<!-- Mobile Toggle Button -->
+<button class="sidebar-toggle" onclick="toggleSidebar()">
+    <i class="bi bi-list"></i>
+</button>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById('studentSidebar').classList.toggle('active');
+    }
+</script>

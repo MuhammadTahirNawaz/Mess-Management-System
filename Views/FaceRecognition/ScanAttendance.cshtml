@@ -1,0 +1,267 @@
+@{
+    ViewData["Title"] = "Face Attendance Scanner";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-camera-video-fill me-2"></i>Face Recognition Attendance
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-info" role="alert">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        <strong>Welcome!</strong> Position your face in the camera to mark attendance automatically.
+                    </div>
+
+                    <div id="errorAlert" class="alert alert-danger d-none" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <span id="errorMessage"></span>
+                    </div>
+
+                    <div id="successAlert" class="alert alert-success d-none" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        <div id="successContent"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="text-center mb-4">
+                                <div class="position-relative d-inline-block">
+                                    <video id="video" width="640" height="480" autoplay class="border border-3 border-success rounded shadow"></video>
+                                    <canvas id="canvas" width="640" height="480" class="d-none"></canvas>
+                                    <div id="scanningOverlay" class="position-absolute top-0 start-0 w-100 h-100 d-none">
+                                        <div class="d-flex align-items-center justify-content-center h-100">
+                                            <div class="spinner-border text-success" style="width: 5rem; height: 5rem;" role="status">
+                                                <span class="visually-hidden">Scanning...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-center gap-3">
+                                <button id="scanBtn" class="btn btn-success btn-lg">
+                                    <i class="bi bi-camera-fill me-2"></i>Scan Face
+                                </button>
+                                <button id="autoScanBtn" class="btn btn-outline-success btn-lg">
+                                    <i class="bi bi-play-fill me-2"></i>Auto Scan
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card border-success">
+                                <div class="card-header bg-success text-white">
+                                    <h5 class="mb-0">
+                                        <i class="bi bi-clock-history me-2"></i>Recent Attendance
+                                    </h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div id="recentAttendance" class="list-group list-group-flush">
+                                        <div class="list-group-item text-center text-muted">
+                                            No attendance marked yet
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card border-info mt-3">
+                                <div class="card-header bg-info text-white">
+                                    <h6 class="mb-0">
+                                        <i class="bi bi-info-circle me-2"></i>Instructions
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="small mb-0">
+                                        <li>Stand in good lighting</li>
+                                        <li>Look at camera</li>
+                                        <li>Click "Scan Face"</li>
+                                        <li>Or use "Auto Scan" for continuous scanning</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const scanBtn = document.getElementById('scanBtn');
+    const autoScanBtn = document.getElementById('autoScanBtn');
+    const scanningOverlay = document.getElementById('scanningOverlay');
+    const errorAlert = document.getElementById('errorAlert');
+    const errorMessage = document.getElementById('errorMessage');
+    const successAlert = document.getElementById('successAlert');
+    const successContent = document.getElementById('successContent');
+    const recentAttendance = document.getElementById('recentAttendance');
+    const context = canvas.getContext('2d');
+    let autoScanInterval = null;
+    let recentScans = [];
+
+    // Start camera
+    async function startCamera() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { 
+                    width: 640, 
+                    height: 480,
+                    facingMode: 'user'
+                } 
+            });
+            video.srcObject = stream;
+        } catch (err) {
+            showError('Unable to access camera. Please allow camera permissions.');
+            console.error('Camera error:', err);
+        }
+    }
+
+    // Scan face
+    async function scanFace() {
+        hideAlerts();
+        scanningOverlay.classList.remove('d-none');
+        scanBtn.disabled = true;
+
+        context.drawImage(video, 0, 0, 640, 480);
+        const imageData = canvas.toDataURL('image/jpeg');
+
+        try {
+            const response = await fetch('/FaceRecognition/VerifyFace', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ imageData: imageData })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showSuccessWithDetails(result);
+                addToRecentAttendance(result);
+                playSuccessSound();
+            } else {
+                showError(result.message);
+            }
+        } catch (err) {
+            showError('Network error. Please try again.');
+            console.error('Scan error:', err);
+        } finally {
+            scanningOverlay.classList.add('d-none');
+            scanBtn.disabled = false;
+        }
+    }
+
+    // Manual scan
+    scanBtn.addEventListener('click', scanFace);
+
+    // Auto scan toggle
+    autoScanBtn.addEventListener('click', () => {
+        if (autoScanInterval) {
+            clearInterval(autoScanInterval);
+            autoScanInterval = null;
+            autoScanBtn.innerHTML = '<i class="bi bi-play-fill me-2"></i>Auto Scan';
+            autoScanBtn.classList.remove('btn-danger');
+            autoScanBtn.classList.add('btn-outline-success');
+        } else {
+            autoScanInterval = setInterval(scanFace, 3000);
+            autoScanBtn.innerHTML = '<i class="bi bi-stop-fill me-2"></i>Stop';
+            autoScanBtn.classList.remove('btn-outline-success');
+            autoScanBtn.classList.add('btn-danger');
+        }
+    });
+
+    function showSuccessWithDetails(result) {
+        successContent.innerHTML = `
+            <h5 class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>${result.message}</h5>
+            <div class="row">
+                <div class="col-6"><strong>Student:</strong> ${result.studentName}</div>
+                <div class="col-6"><strong>ID:</strong> ${result.permanentId}</div>
+                <div class="col-6"><strong>Type:</strong> ${result.membershipType}</div>
+                <div class="col-6"><strong>Amount:</strong> PKR ${result.amount}</div>
+            </div>
+        `;
+        successAlert.classList.remove('d-none');
+
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            successAlert.classList.add('d-none');
+        }, 5000);
+    }
+
+    function addToRecentAttendance(result) {
+        const time = new Date().toLocaleTimeString();
+        const item = `
+            <div class="list-group-item">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>${result.studentName}</strong><br>
+                        <small class="text-muted">${result.permanentId}</small>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-success">${time}</span><br>
+                        <small>PKR ${result.amount}</small>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        recentScans.unshift(item);
+        if (recentScans.length > 5) recentScans.pop();
+
+        recentAttendance.innerHTML = recentScans.join('');
+    }
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorAlert.classList.remove('d-none');
+        setTimeout(() => {
+            errorAlert.classList.add('d-none');
+        }, 5000);
+    }
+
+    function hideAlerts() {
+        errorAlert.classList.add('d-none');
+        successAlert.classList.add('d-none');
+    }
+
+    function playSuccessSound() {
+        // Create a simple beep sound
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.5);
+    }
+
+    // Initialize camera
+    startCamera();
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+        if (autoScanInterval) {
+            clearInterval(autoScanInterval);
+        }
+        if (video.srcObject) {
+            video.srcObject.getTracks().forEach(track => track.stop());
+        }
+    });
+</script>

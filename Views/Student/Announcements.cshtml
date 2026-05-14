@@ -1,0 +1,68 @@
+@model List<Semester_Project.Models.Announcement>
+@{
+    ViewData["Title"] = "Announcements";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary mb-0"><i class="bi bi-megaphone me-2"></i>Announcements</h2>
+        <a asp-action="Dashboard" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+        </a>
+    </div>
+
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>No active announcements at this time.
+        </div>
+    }
+    else
+    {
+        @foreach (var announcement in Model)
+        {
+            var priorityClass = announcement.Priority switch
+            {
+                "Urgent" => "danger",
+                "High" => "warning",
+                "Normal" => "info",
+                "Low" => "secondary",
+                _ => "info"
+            };
+
+            var priorityIcon = announcement.Priority switch
+            {
+                "Urgent" => "exclamation-triangle-fill",
+                "High" => "exclamation-circle-fill",
+                "Normal" => "info-circle-fill",
+                "Low" => "chat-left-text-fill",
+                _ => "info-circle-fill"
+            };
+
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-@priorityClass text-white d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="bi bi-@priorityIcon me-2"></i>
+                        <strong>@announcement.Title</strong>
+                    </div>
+                    <span class="badge bg-light text-@priorityClass">@announcement.Priority</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-text" style="white-space: pre-line">@announcement.Content</p>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            <i class="bi bi-calendar-event me-1"></i>Posted: @announcement.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")
+                        </small>
+                        @if (announcement.ExpiresAt.HasValue)
+                        {
+                            <small class="text-muted">
+                                <i class="bi bi-clock me-1"></i>Expires: @announcement.ExpiresAt.Value.ToString("dd MMM yyyy")
+                            </small>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

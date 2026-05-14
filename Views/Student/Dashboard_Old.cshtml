@@ -1,0 +1,262 @@
+@{
+    ViewData["Title"] = "Student Dashboard";
+}
+
+<style>
+    .dashboard-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+    }
+    .feature-card {
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        border: 1px solid #e0e0e0;
+        height: 100%;
+        background: white;
+    }
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        border-color: #667eea;
+    }
+    .feature-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 2.5rem;
+    }
+    .icon-info { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+    .icon-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+    .icon-success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; }
+    .icon-warning { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+    .icon-danger { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; }
+</style>
+
+<div class="container-fluid mt-4">
+    <div class="dashboard-header">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <h1 class="mb-2"><i class="bi bi-person-circle me-2"></i>Welcome, @ViewBag.StudentName!</h1>
+                <p class="mb-0 opacity-75">Student Dashboard - Mess Management System</p>
+            </div>
+            <div class="mt-3 mt-md-0">
+                <span class="badge bg-light text-dark px-3 py-2 me-2" style="font-size: 1rem;">
+                    <i class="bi bi-clock me-2"></i>@DateTime.Now.ToString("MMM dd, yyyy")
+                </span>
+                <a asp-action="Logout" asp-controller="Student" class="btn btn-light">
+                    <i class="bi bi-box-arrow-right me-2"></i>Logout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @* Announcement Slider *@
+    <partial name="_AnnouncementSlider" />
+
+    <h4 class="mb-4 mt-4"><i class="bi bi-grid me-2 text-primary"></i>Quick Access</h4>
+    <div class="row g-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="feature-card card">
+                <div class="card-body text-center">
+                    <div class="feature-icon icon-info">
+                        <i class="bi bi-credit-card-2-front"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Digital ID Card</h5>
+                    <p class="card-text text-muted small">View your digital student ID with QR code</p>
+                    <a asp-action="DigitalCard" asp-controller="Student" class="btn btn-info btn-sm w-100 text-white">
+                        <i class="bi bi-arrow-right-circle me-1"></i>View Card
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="feature-card card">
+                <div class="card-body text-center">
+                    <div class="feature-icon icon-primary">
+                        <i class="bi bi-person-circle"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">My Profile</h5>
+                    <p class="card-text text-muted small">View and update your profile information</p>
+                    <a asp-action="MyProfile" asp-controller="Student" class="btn btn-primary btn-sm w-100">
+                        <i class="bi bi-arrow-right-circle me-1"></i>View Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="feature-card card">
+                <div class="card-body text-center">
+                    <div class="feature-icon icon-success">
+                        <i class="bi bi-lock-fill"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Change Password</h5>
+                    <p class="card-text text-muted small">Update your account password</p>
+                    <a asp-action="ChangePassword" asp-controller="Student" class="btn btn-success btn-sm w-100">
+                        <i class="bi bi-arrow-right-circle me-1"></i>Change Password
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="feature-card card border-info">
+                <div class="card-body text-center">
+                    <div class="feature-icon icon-info">
+                        <i class="bi bi-camera-fill"></i>
+                    </div>
+                    <h5 class="card-title fw-bold text-info">Face Recognition</h5>
+                    <p class="card-text text-muted small">Register your face for attendance</p>
+                    <a asp-action="RegisterFace" asp-controller="FaceRecognition" class="btn btn-info btn-sm w-100 text-white">
+                        <i class="bi bi-arrow-right-circle me-1"></i>Register Face
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="feature-card card">
+                <div class="card-body text-center">
+                    <div class="feature-icon icon-warning">
+                        <i class="bi bi-calendar-week"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Mess Menu</h5>
+                    <p class="card-text text-muted small">View weekly mess meal menu</p>
+                    <a asp-action="ViewMenu" asp-controller="Student" class="btn btn-warning btn-sm w-100 text-white">
+                        <i class="bi bi-arrow-right-circle me-1"></i>View Menu
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-md-6">
+            <div class="feature-card card">
+                <div class="card-body text-center">
+                    <div class="feature-icon icon-info">
+                        <i class="bi bi-receipt"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">My Bills</h5>
+                    <p class="card-text text-muted small">View and track your mess bills</p>
+                    <a asp-action="ViewBill" asp-controller="Student" class="btn btn-info btn-sm w-100 text-white">
+                        <i class="bi bi-arrow-right-circle me-1"></i>View Bills
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-md-6">
+            <div class="feature-card card border-success">
+                <div class="card-body text-center">
+                    <div class="feature-icon icon-success">
+                        <i class="bi bi-credit-card"></i>
+                    </div>
+                    <h5 class="card-title fw-bold text-success">Pay Bills</h5>
+                    <p class="card-text text-muted small">Pay your pending bills online</p>
+                    <a asp-action="Checkout" asp-controller="Payment" class="btn btn-success btn-sm w-100">
+                        <i class="bi bi-lock-fill me-1"></i>Pay Now
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-md-6">
+            <div class="feature-card card">
+                <div class="card-body text-center">
+                    <div class="feature-icon icon-primary">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Payment History</h5>
+                    <p class="card-text text-muted small">View your payment records</p>
+                    <a asp-action="History" asp-controller="Payment" class="btn btn-primary">
+                        View History
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-chat-dots text-secondary" style="font-size: 3rem;"></i>
+                    <h5 class="card-title mt-3">Complaints</h5>
+                    <p class="card-text text-muted">Submit and track complaints</p>
+                    <a asp-action="Complaints" asp-controller="Student" class="btn btn-secondary">
+                        Manage Complaints
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-receipt-cutoff text-warning" style="font-size: 3rem;"></i>
+                    <h5 class="card-title mt-3">Bill Recheck</h5>
+                    <p class="card-text text-muted">Request admin to review your bill</p>
+                    <a asp-action="BillRecheckRequests" asp-controller="Student" class="btn btn-warning">
+                        My Requests
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-megaphone text-danger" style="font-size: 3rem;"></i>
+                    <h5 class="card-title mt-3">Announcements</h5>
+                    <p class="card-text text-muted">View latest announcements</p>
+                    <a asp-action="Announcements" asp-controller="Student" class="btn btn-danger">
+                        View Announcements
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100 border-danger">
+                <div class="card-body text-center">
+                    <i class="bi bi-trash text-danger" style="font-size: 3rem;"></i>
+                    <h5 class="card-title mt-3 text-danger">Delete Account</h5>
+                    <p class="card-text text-muted">Permanently delete your account</p>
+                    <a asp-action="DeleteAccount" asp-controller="Student" class="btn btn-outline-danger">
+                        Delete Account
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-info-circle me-2"></i>Account Information
+                    </h5>
+                    <hr>
+                    <p><strong>Name:</strong> @ViewBag.StudentName</p>
+                    <p><strong>Email:</strong> @Context.Session.GetString("StudentEmail")</p>
+                    <p><strong>Account Type:</strong> Student</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

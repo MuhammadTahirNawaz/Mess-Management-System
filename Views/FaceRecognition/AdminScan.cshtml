@@ -1,0 +1,806 @@
+@{
+    ViewData["Title"] = "Face Recognition Scanner";
+}
+ 
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 280px;
+        background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+        padding: 0;
+        z-index: 1000;
+        box-shadow: 2px 0 15px rgba(0,0,0,0.3);
+        overflow-y: auto;
+    }
+
+    .sidebar-header {
+        padding: 25px 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .sidebar-header h4 {
+        margin: 0;
+        font-weight: 700;
+        font-size: 1.3rem;
+        color: #00d9ff;
+    }
+
+    .sidebar-header p {
+        margin: 5px 0 0;
+        font-size: 0.85rem;
+        opacity: 0.9;
+    }
+
+    .sidebar-menu {
+        padding: 20px 0;
+    }
+
+    .menu-section {
+        margin-bottom: 25px;
+    }
+
+    .menu-section-title {
+        color: #95a5a6;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 1px;
+        padding: 0 20px 10px;
+    }
+
+    .menu-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 20px;
+        color: #ecf0f1;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+    }
+
+    .menu-item:hover {
+        background: rgba(255,255,255,0.1);
+        color: #00d9ff;
+        border-left-color: #00d9ff;
+        padding-left: 25px;
+    }
+
+    .menu-item.active {
+        background: linear-gradient(90deg, rgba(102,126,234,0.3) 0%, rgba(118,75,162,0.3) 100%);
+        color: #00d9ff;
+        border-left-color: #00d9ff;
+        font-weight: 600;
+    }
+
+    .menu-item i {
+        font-size: 1.2rem;
+        width: 30px;
+    }
+
+    .main-content {
+        margin-left: 280px;
+        padding: 30px;
+        margin-top: 80px;
+    }
+
+    .page-header {
+        background: white;
+        border-radius: 15px;
+        padding: 25px 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .page-header h2 {
+        margin: 0;
+        color: #2c3e50;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .page-header h2 i {
+        font-size: 2rem;
+        color: #667eea;
+    }
+
+    .scanner-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        height: 100%;
+    }
+
+    .video-container {
+        position: relative;
+        background: #000;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        margin-bottom: 20px;
+    }
+
+    #video {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 15px;
+    }
+
+    .scan-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        height: 80%;
+        border: 3px dashed #00d9ff;
+        border-radius: 15px;
+        pointer-events: none;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @@keyframes pulse {
+        0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+        50% { opacity: 1; transform: translate(-50%, -50%) scale(1.02); }
+    }
+
+    .control-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .scan-btn {
+        flex: 1;
+        padding: 15px 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .scan-btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .scan-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102,126,234,0.4);
+    }
+
+    .scan-btn-success {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+    }
+
+    .scan-btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(17,153,142,0.4);
+    }
+
+    .scan-btn-danger {
+        background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+        color: white;
+    }
+
+    .scan-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .stats-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        margin-bottom: 25px;
+    }
+
+    .stats-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #ecf0f1;
+    }
+
+    .stats-header i {
+        font-size: 1.5rem;
+        color: #667eea;
+    }
+
+    .stats-header h5 {
+        margin: 0;
+        color: #2c3e50;
+        font-weight: 700;
+    }
+
+    .stat-boxes {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .stat-box {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        color: white;
+        box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+    }
+
+    .stat-box h2 {
+        margin: 0 0 5px;
+        font-size: 2.5rem;
+        font-weight: 700;
+    }
+
+    .stat-box p {
+        margin: 0;
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .recent-scans-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        height: 100%;
+    }
+
+    .recent-scans-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #ecf0f1;
+    }
+
+    .recent-scans-header i {
+        font-size: 1.5rem;
+        color: #667eea;
+    }
+
+    .recent-scans-header h5 {
+        margin: 0;
+        color: #2c3e50;
+        font-weight: 700;
+    }
+
+    .scans-list {
+        max-height: 450px;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
+
+    .scans-list::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .scans-list::-webkit-scrollbar-track {
+        background: #ecf0f1;
+        border-radius: 10px;
+    }
+
+    .scans-list::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 10px;
+    }
+
+    .scan-item {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 12px;
+        transition: all 0.3s ease;
+        border-left: 4px solid #667eea;
+    }
+
+    .scan-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .scan-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 8px;
+    }
+
+    .scan-item-name {
+        font-weight: 700;
+        color: #2c3e50;
+        font-size: 1rem;
+    }
+
+    .scan-item-id {
+        color: #7f8c8d;
+        font-size: 0.85rem;
+    }
+
+    .scan-item-time {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .scan-item-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .scan-item-amount {
+        color: #667eea;
+        font-weight: 700;
+        font-size: 0.95rem;
+    }
+
+    .scan-item-meal {
+        color: #95a5a6;
+        font-size: 0.85rem;
+    }
+
+    .alert-custom {
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 20px;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        animation: slideIn 0.3s ease-out;
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .alert-success-custom {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+    }
+
+    .alert-warning-custom {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+    }
+
+    .alert-info-custom {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+    }
+
+    .no-scans {
+        text-align: center;
+        padding: 40px 20px;
+        color: #95a5a6;
+    }
+
+    .no-scans i {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        opacity: 0.5;
+    }
+
+    .loading-spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+    }
+
+    @@keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    @@media (max-width: 768px) {
+        .sidebar {
+            transform: translateX(-280px);
+        }
+
+        .main-content {
+            margin-left: 0;
+        }
+
+        .stat-boxes {
+            grid-template-columns: 1fr;
+        }
+
+        .control-buttons {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="sidebar-header">
+        <h4><i class="bi bi-camera-video-fill"></i> Face Scanner</h4>
+        <p>Admin Control Panel</p>
+    </div>
+    <div class="sidebar-menu">
+        <div class="menu-section">
+            <div class="menu-section-title">Navigation</div>
+            <a asp-action="Dashboard" asp-controller="Admin" class="menu-item">
+                <i class="bi bi-speedometer2"></i>
+                <span>Dashboard</span>
+            </a>
+            <a asp-action="AdminScan" asp-controller="FaceRecognition" class="menu-item active">
+                <i class="bi bi-camera-video"></i>
+                <span>Face Scanner</span>
+            </a>
+        </div>
+        <div class="menu-section">
+            <div class="menu-section-title">Management</div>
+            <a asp-action="Students" asp-controller="Admin" class="menu-item">
+                <i class="bi bi-people"></i>
+                <span>Students</span>
+            </a>
+            <a asp-action="Attendance" asp-controller="Admin" class="menu-item">
+                <i class="bi bi-calendar-check"></i>
+                <span>Attendance</span>
+            </a>
+            <a asp-action="Menu" asp-controller="Admin" class="menu-item">
+                <i class="bi bi-calendar3"></i>
+                <span>Mess Menu</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h2>
+            <i class="bi bi-camera-video-fill"></i>
+            Face Recognition Scanner
+        </h2>
+    </div>
+
+    <div class="row">
+        <!-- Scanner Section -->
+        <div class="col-lg-7 mb-4">
+            <div class="scanner-card">
+                <div class="video-container">
+                    <video id="video" autoplay playsinline></video>
+                    <div class="scan-overlay"></div>
+                    <canvas id="canvas" class="d-none"></canvas>
+                </div>
+
+                <div class="control-buttons">
+                    <button id="scanBtn" class="scan-btn scan-btn-primary">
+                        <i class="bi bi-camera-fill"></i>
+                        <span>Scan Now</span>
+                    </button>
+                    <button id="autoScanBtn" class="scan-btn scan-btn-success">
+                        <i class="bi bi-play-fill"></i>
+                        <span>Start Auto-Scan</span>
+                    </button>
+                </div>
+
+                <div id="scanResult"></div>
+            </div>
+        </div>
+
+        <!-- Stats and Recent Scans -->
+        <div class="col-lg-5">
+            <!-- Stats Card -->
+            <div class="stats-card">
+                <div class="stats-header">
+                    <i class="bi bi-graph-up"></i>
+                    <h5>Today's Statistics</h5>
+                </div>
+                <div class="stat-boxes">
+                    <div class="stat-box">
+                        <h2 id="totalCount">0</h2>
+                        <p>Total Scans</p>
+                    </div>
+                    <div class="stat-box">
+                        <h2 id="recentCount">0</h2>
+                        <p>This Session</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Scans Card -->
+            <div class="recent-scans-card">
+                <div class="recent-scans-header">
+                    <i class="bi bi-clock-history"></i>
+                    <h5>Recent Scans</h5>
+                </div>
+                <div class="scans-list" id="recentScans">
+                    <div class="no-scans">
+                        <i class="bi bi-inbox"></i>
+                        <p>No scans yet. Start scanning to see results here.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const scanBtn = document.getElementById('scanBtn');
+    const autoScanBtn = document.getElementById('autoScanBtn');
+    const recentScans = document.getElementById('recentScans');
+    const scanResult = document.getElementById('scanResult');
+    const totalCount = document.getElementById('totalCount');
+    const recentCount = document.getElementById('recentCount');
+    const context = canvas.getContext('2d');
+    
+    let autoScanInterval = null;
+    let scansThisSession = 0;
+    let recentScansList = [];
+
+    // Start camera with better error handling
+    async function startCamera() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { 
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 },
+                    facingMode: 'user'
+                } 
+            });
+            video.srcObject = stream;
+            video.onloadedmetadata = () => {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+            };
+        } catch (err) {
+            showAlert('warning', '<i class="bi bi-exclamation-triangle me-2"></i>Unable to access camera. Please allow camera permissions.');
+            console.error('Camera error:', err);
+        }
+    }
+
+    // Scan face with loading state
+    async function scanFace() {
+        if (scanBtn.disabled) return;
+        
+        scanBtn.disabled = true;
+        scanBtn.innerHTML = '<span class="loading-spinner me-2"></span><span>Scanning...</span>';
+        scanResult.innerHTML = `
+            <div class="alert-custom alert-info-custom">
+                <div class="d-flex align-items-center">
+                    <span class="loading-spinner me-3"></span>
+                    <div>
+                        <strong>Processing...</strong>
+                        <p class="mb-0 mt-1">Analyzing face recognition data</p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = canvas.toDataURL('image/jpeg', 0.95);
+
+        try {
+            const response = await fetch('/FaceRecognition/VerifyFace', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ imageData: imageData })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showSuccessResult(result);
+                addToRecentScans(result);
+                scansThisSession++;
+                recentCount.textContent = scansThisSession;
+                playSuccessSound();
+            } else {
+                showAlert('warning', `<i class="bi bi-exclamation-triangle me-2"></i>${result.message}`);
+            }
+        } catch (err) {
+            showAlert('warning', '<i class="bi bi-exclamation-triangle me-2"></i>Network error. Please check your connection and try again.');
+            console.error('Scan error:', err);
+        } finally {
+            scanBtn.disabled = false;
+            scanBtn.innerHTML = '<i class="bi bi-camera-fill"></i><span>Scan Now</span>';
+        }
+    }
+
+    // Manual scan
+    scanBtn.addEventListener('click', scanFace);
+
+    // Auto scan toggle
+    autoScanBtn.addEventListener('click', () => {
+        if (autoScanInterval) {
+            clearInterval(autoScanInterval);
+            autoScanInterval = null;
+            autoScanBtn.innerHTML = '<i class="bi bi-play-fill"></i><span>Start Auto-Scan</span>';
+            autoScanBtn.classList.remove('scan-btn-danger');
+            autoScanBtn.classList.add('scan-btn-success');
+        } else {
+            autoScanInterval = setInterval(scanFace, 5000);
+            autoScanBtn.innerHTML = '<i class="bi bi-stop-fill"></i><span>Stop Auto-Scan</span>';
+            autoScanBtn.classList.remove('scan-btn-success');
+            autoScanBtn.classList.add('scan-btn-danger');
+            scanFace(); // Immediate first scan
+        }
+    });
+
+    function showSuccessResult(result) {
+        scanResult.innerHTML = `
+            <div class="alert-custom alert-success-custom">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">
+                        <i class="bi bi-check-circle-fill me-2"></i>Attendance Marked Successfully!
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" onclick="this.parentElement.parentElement.remove()"></button>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <small style="opacity: 0.9;">Student Name</small>
+                        <div class="fw-bold">${result.studentName}</div>
+                    </div>
+                    <div class="col-md-3">
+                        <small style="opacity: 0.9;">Student ID</small>
+                        <div class="fw-bold">${result.permanentId}</div>
+                    </div>
+                    <div class="col-md-3">
+                        <small style="opacity: 0.9;">Membership</small>
+                        <div class="fw-bold">${result.membershipType}</div>
+                    </div>
+                    <div class="col-md-3">
+                        <small style="opacity: 0.9;">Amount</small>
+                        <div class="fw-bold">Rs. ${result.amount}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Auto-dismiss after 5 seconds
+        setTimeout(() => {
+            if (scanResult.firstChild) {
+                scanResult.firstChild.style.transition = 'opacity 0.5s';
+                scanResult.firstChild.style.opacity = '0';
+                setTimeout(() => scanResult.innerHTML = '', 500);
+            }
+        }, 5000);
+    }
+
+    function addToRecentScans(result) {
+        const time = new Date().toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: true 
+        });
+        
+        const mealType = result.mealType || 'Lunch';
+        
+        const item = `
+            <div class="scan-item">
+                <div class="scan-item-header">
+                    <div>
+                        <div class="scan-item-name">${result.studentName}</div>
+                        <div class="scan-item-id">${result.permanentId}</div>
+                    </div>
+                    <span class="scan-item-time"><i class="bi bi-clock me-1"></i>${time}</span>
+                </div>
+                <div class="scan-item-footer">
+                    <span class="scan-item-amount"><i class="bi bi-currency-rupee"></i>Rs. ${result.amount}</span>
+                    <span class="scan-item-meal"><i class="bi bi-egg-fried me-1"></i>${mealType}</span>
+                </div>
+            </div>
+        `;
+
+        recentScansList.unshift(item);
+        if (recentScansList.length > 15) recentScansList.pop();
+
+        if (recentScansList.length > 0) {
+            recentScans.innerHTML = recentScansList.join('');
+        }
+    }
+
+    function showAlert(type, message) {
+        const alertClass = type === 'warning' ? 'alert-warning-custom' : 'alert-info-custom';
+        scanResult.innerHTML = `
+            <div class="alert-custom ${alertClass}">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>${message}</div>
+                    <button type="button" class="btn-close btn-close-white" onclick="this.parentElement.parentElement.remove()"></button>
+                </div>
+            </div>
+        `;
+        
+        // Auto-dismiss after 4 seconds
+        setTimeout(() => {
+            if (scanResult.firstChild) {
+                scanResult.firstChild.style.transition = 'opacity 0.5s';
+                scanResult.firstChild.style.opacity = '0';
+                setTimeout(() => scanResult.innerHTML = '', 500);
+            }
+        }, 4000);
+    }
+
+    function playSuccessSound() {
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        } catch (err) {
+            console.log('Audio playback not supported');
+        }
+    }
+
+    // Initialize camera on page load
+    startCamera();
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+        if (autoScanInterval) clearInterval(autoScanInterval);
+        if (video.srcObject) {
+            video.srcObject.getTracks().forEach(track => track.stop());
+        }
+    });
+
+    // Handle visibility change (pause when tab is hidden)
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden && autoScanInterval) {
+            clearInterval(autoScanInterval);
+            autoScanInterval = null;
+            autoScanBtn.innerHTML = '<i class="bi bi-play-fill"></i><span>Start Auto-Scan</span>';
+            autoScanBtn.classList.remove('scan-btn-danger');
+            autoScanBtn.classList.add('scan-btn-success');
+        }
+    });
+</script>

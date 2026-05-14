@@ -1,0 +1,8 @@
+[Bb]in/
+[Oo]bj/
+[Pp]ublish/
+.vs/
+*.dll
+*.exe
+*.pdb
+*.zip

@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Mess Management</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Semester_Project.styles.css" asp-append-version="true" />
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            padding-top: 0 !important;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .container {
+            margin-top: 80px !important;
+            max-width: 960px;
+        }
+        .container-fluid {
+            margin-top: 80px !important;
+        }
+        main {
+            flex: 1 0 auto;
+        }
+        main > .container, main > .container-fluid {
+            margin-top: 80px !important;
+        }
+        footer {
+            flex-shrink: 0;
+            margin-top: 0 !important;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1050;
+            padding: 0.5rem 1rem;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #fff !important;
+        }
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.4rem 0.8rem !important;
+            font-size: 0.9rem;
+        }
+        .nav-link:hover {
+            color: #fff !important;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+        }
+        .navbar-toggler {
+            border-color: rgba(255,255,255,0.5);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-building"></i> Mess Management System
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-door"></i> Home
+                            </a>
+                        </li>
+                        @if (Context.Session.GetString("StudentEmail") != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Student" asp-action="Dashboard">
+                                    <i class="bi bi-speedometer2"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Student" asp-action="DigitalCard">
+                                    <i class="bi bi-credit-card"></i> My Card
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Student" asp-action="Logout">
+                                    <i class="bi bi-box-arrow-right"></i> Logout
+                                </a>
+                            </li>
+                        }
+                        else if (Context.Session.GetString("AdminEmail") != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="Dashboard">
+                                    <i class="bi bi-speedometer2"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="Logout">
+                                    <i class="bi bi-box-arrow-right"></i> Logout
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Student" asp-action="Login">
+                                    <i class="bi bi-person-circle"></i> Student Login
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="Login">
+                                    <i class="bi bi-shield-lock"></i> Admin Login
+                                </a>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <button id="themeToggle" class="btn btn-sm btn-outline-light ms-2" title="Toggle Theme">
+                                <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top text-center py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="mb-1">
+                        <strong>Mess Management System</strong>
+                    </p>
+                    <p class="mb-1" style="font-size: 0.9rem;">&copy; 2025 - All Rights Reserved</p>
+                    <p class="mb-0">
+                        <small>
+                            <i class="bi bi-envelope me-1"></i>tahaba627926@gmail.com
+                            <span class="mx-2">|</span>
+                            <i class="bi bi-telephone me-1"></i>+923479391185
+                        </small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Theme Toggle Functionality
+        (function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const html = document.documentElement;
+            
+            // Load saved theme or default to dark
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            html.setAttribute('data-theme', currentTheme);
+            updateIcon(currentTheme);
+            
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function() {
+                    const currentTheme = html.getAttribute('data-theme');
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    
+                    html.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    updateIcon(newTheme);
+                });
+            }
+            
+            function updateIcon(theme) {
+                if (themeIcon) {
+                    themeIcon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+                }
+            }
+        })();
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

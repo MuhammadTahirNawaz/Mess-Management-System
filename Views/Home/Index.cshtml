@@ -1,0 +1,424 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mess Management System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .hero-container {
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        .hero-card {
+            background: rgba(15, 20, 40, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 255, 255, 0.2), 0 0 40px rgba(255, 0, 255, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        
+        .header-section {
+            background: linear-gradient(135deg, #0f1428 0%, #1a1f3a 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            border-bottom: 2px solid rgba(0, 255, 255, 0.2);
+        }
+        
+        .logo-container {
+            margin-bottom: 20px;
+        }
+        
+        .system-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
+            border-radius: 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5), 0 0 60px rgba(255, 0, 255, 0.3);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            font-size: 2.5rem;
+            color: #0a0e27;
+            transform: perspective(1000px) rotateY(0deg);
+            transition: all 0.3s ease;
+        }
+        
+        .header-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header-section p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            margin: 0;
+        }
+        
+        .content-section {
+            padding: 50px 30px;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #00ffff;
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+        
+        .login-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .login-card {
+            background: rgba(15, 20, 40, 0.8);
+            border-radius: 15px;
+            padding: 35px 25px;
+            text-align: center;
+            color: white;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.05);
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .login-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.5), 0 0 60px rgba(0, 255, 255, 0.3);
+            color: white;
+            border-color: rgba(0, 255, 255, 0.6);
+        }
+        
+        .login-card.admin-card {
+            border: 2px solid rgba(255, 0, 100, 0.3);
+            box-shadow: 0 5px 20px rgba(255, 0, 100, 0.2), inset 0 0 20px rgba(255, 0, 100, 0.05);
+        }
+        
+        .login-card.admin-card:hover {
+            box-shadow: 0 15px 40px rgba(255, 0, 100, 0.5), 0 0 60px rgba(255, 0, 100, 0.3);
+            border-color: rgba(255, 0, 100, 0.6);
+        }
+        
+        .login-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 35px;
+            backdrop-filter: blur(10px);
+            border: 3px solid rgba(0, 255, 255, 0.3);
+            color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+        
+        .admin-card .login-icon {
+            background: rgba(255, 0, 100, 0.1);
+            border-color: rgba(255, 0, 100, 0.3);
+            color: #ff0064;
+            box-shadow: 0 0 20px rgba(255, 0, 100, 0.3);
+        }
+        
+        .login-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .login-card p {
+            opacity: 0.9;
+            margin-bottom: 0;
+            font-size: 0.95rem;
+        }
+        
+        .register-section {
+            background: rgba(15, 20, 40, 0.6);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            color: white;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.2), inset 0 0 30px rgba(0, 255, 255, 0.05);
+        }
+        
+        .register-section h4 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .register-section p {
+            opacity: 0.95;
+            margin-bottom: 20px;
+        }
+        
+        .btn-register {
+            background: linear-gradient(135deg, #00ffff 0%, #00cccc 100%);
+            color: #0a0e27;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3), 0 0 30px rgba(0, 255, 255, 0.2);
+        }
+        
+        .btn-register:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 255, 255, 0.5), 0 0 50px rgba(0, 255, 255, 0.3);
+            background: linear-gradient(135deg, #00ffff 0%, #00ffaa 100%);
+            color: #0a0e27;
+        }
+        
+        .features-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid #e9ecef;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .feature-item {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            color: #00ffff;
+            font-size: 24px;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        }
+        
+        .feature-item h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #00ffff;
+            margin-bottom: 8px;
+        }
+        
+        .feature-item p {
+            font-size: 0.85rem;
+            color: #8899aa;
+            margin: 0;
+        }
+        
+        /* Smooth Animations */
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @@keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @@keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @@keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @@keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        .hero-card {
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .header-section {
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .login-card:nth-child(1) {
+            animation: slideInLeft 0.8s ease-out 0.2s both;
+        }
+        
+        .login-card:nth-child(2) {
+            animation: slideInRight 0.8s ease-out 0.2s both;
+        }
+        
+        .register-section {
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+        
+        .feature-item {
+            animation: fadeInUp 0.6s ease-out both;
+        }
+        
+        .feature-item:nth-child(1) { animation-delay: 0.5s; }
+        .feature-item:nth-child(2) { animation-delay: 0.6s; }
+        .feature-item:nth-child(3) { animation-delay: 0.7s; }
+        .feature-item:nth-child(4) { animation-delay: 0.8s; }
+        
+        @@media (max-width: 768px) {
+            .header-section h1 {
+                font-size: 2rem;
+            }
+            
+            .login-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-container">
+        <div class="hero-card">
+            <div class="header-section">
+                <div class="logo-container">
+                    <div class="system-icon">
+                        <i class="bi bi-building"></i>
+                    </div>
+                </div>
+                <h1>Mess Management System</h1>
+                <p>University Hostel Food Service Portal</p>
+            </div>
+            
+            <div class="content-section">
+                <h2 class="section-title">Welcome! Please Choose Your Login</h2>
+                
+                <div class="login-grid">
+                    <a href="@Url.Action("Login", "Student")" class="login-card">
+                        <div class="login-icon">
+                            <i class="bi bi-person-circle"></i>
+                        </div>
+                        <h3>Student Login</h3>
+                        <p>Access your mess account, view bills, check attendance and more</p>
+                    </a>
+                    
+                    <a href="@Url.Action("Login", "Admin")" class="login-card admin-card">
+                        <div class="login-icon">
+                            <i class="bi bi-shield-lock"></i>
+                        </div>
+                        <h3>Admin Login</h3>
+                        <p>Manage students, menu, attendance, bills and announcements</p>
+                    </a>
+                </div>
+                
+                <div class="register-section">
+                    <h4><i class="bi bi-person-plus-fill me-2"></i>New Student?</h4>
+                    <p>Register now to access the mess management system</p>
+                    <a href="@Url.Action("Register", "Student")" class="btn btn-register">
+                        Create Account
+                    </a>
+                </div>
+                
+                <div class="features-section">
+                    <h3 class="section-title">System Features</h3>
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="bi bi-qr-code-scan"></i>
+                            </div>
+                            <h5>QR Check-In</h5>
+                            <p>Secure attendance with QR codes</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="bi bi-receipt"></i>
+                            </div>
+                            <h5>Digital Billing</h5>
+                            <p>Track your mess expenses</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="bi bi-calendar-week"></i>
+                            </div>
+                            <h5>Weekly Menu</h5>
+                            <p>View daily meal schedules</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="bi bi-megaphone"></i>
+                            </div>
+                            <h5>Announcements</h5>
+                            <p>Stay updated with notices</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+@model List<Semester_Project.Models.BillRecheckRequest>
+
+@{
+    ViewData["Title"] = "Bill Recheck Requests";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-info text-white">
+            <h3 class="mb-0"><i class="bi bi-search"></i> Bill Recheck Requests</h3>
+        </div>
+        <div class="card-body">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    <i class="bi bi-check-circle"></i> @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Student</th>
+                                <th>Month/Year</th>
+                                <th>Request Message</th>
+                                <th>Status</th>
+                                <th>Requested On</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var request in Model)
+                            {
+                                var monthName = new DateTime(request.Year, request.Month, 1).ToString("MMMM");
+                                
+                                <tr>
+                                    <td>
+                                        <strong>@request.Student.Name</strong><br>
+                                        <small class="text-muted">@request.Student.Email</small>
+                                    </td>
+                                    <td>@monthName @request.Year</td>
+                                    <td>@request.RequestMessage.Substring(0, Math.Min(50, request.RequestMessage.Length))...</td>
+                                    <td>
+                                        @if (request.Status == "Pending")
+                                        {
+                                            <span class="badge bg-warning">Pending</span>
+                                        }
+                                        else if (request.Status == "Reviewed")
+                                        {
+                                            <span class="badge bg-info">Reviewed</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">Resolved</span>
+                                        }
+                                    </td>
+                                    <td>@request.RequestedAt.ToString("dd MMM yyyy")</td>
+                                    <td>
+                                        <a asp-action="ReviewRequest" asp-route-id="@request.Id" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-eye"></i> Review
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> No bill recheck requests at this time.
+                </div>
+            }
+
+            <div class="mt-3">
+                <a asp-action="Dashboard" asp-controller="Admin" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,123 @@
+@model List<Semester_Project.Models.MenuItem>
+@{
+    ViewData["Title"] = "Mess Menu";
+    var currentDay = ViewBag.CurrentDay as string;
+    var daysOfWeek = new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+    var mealTypes = new[] { "Breakfast", "Lunch", "Dinner" };
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary mb-0"><i class="bi bi-calendar-week me-2"></i>Weekly Mess Menu</h2>
+        <a asp-action="Dashboard" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+        </a>
+    </div>
+
+    @if (ViewBag.MembershipType == "TeaWater")
+    {
+        <div class="alert alert-warning">
+            <i class="bi bi-cup-hot me-2"></i><strong>Tea & Water Membership</strong> - You have access to breakfast items (tea, water, and light snacks) only.
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-success">
+            <i class="bi bi-cup-straw me-2"></i><strong>Full Meal Membership</strong> - You have access to all meals (Breakfast, Lunch & Dinner).
+        </div>
+    }
+
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>Today is <strong>@currentDay</strong>. View your menu below.
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-primary">
+                        <tr>
+                            <th style="width: 15%">Day</th>
+                            <th style="width: 28%">
+                                <i class="bi bi-sunrise me-1"></i>Breakfast
+                            </th>
+                            <th style="width: 28%">
+                                <i class="bi bi-sun me-1"></i>Lunch
+                            </th>
+                            <th style="width: 28%">
+                                <i class="bi bi-moon me-1"></i>Dinner
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var day in daysOfWeek)
+                        {
+                            var isToday = day == currentDay;
+                            <tr class="@(isToday ? "table-warning" : "")">
+                                <td>
+                                    <strong class="@(isToday ? "text-primary" : "")">
+                                        @day
+                                        @if (isToday)
+                                        {
+                                            <span class="badge bg-primary ms-1">Today</span>
+                                        }
+                                    </strong>
+                                </td>
+                                @foreach (var mealType in mealTypes)
+                                {
+                                    var menuItem = Model.FirstOrDefault(m => m.DayOfWeek == day && m.MealType == mealType);
+                                    <td>
+                                        @if (menuItem != null)
+                                        {
+                                            <div>
+                                                <strong class="text-dark">@menuItem.ItemName</strong>
+                                                <br />
+                                                @if (!string.IsNullOrEmpty(menuItem.Description))
+                                                {
+                                                    <small class="text-muted">@menuItem.Description</small>
+                                                    <br />
+                                                }
+                                                <span class="badge bg-success">PKR @menuItem.Price.ToString("N0")</span>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted"><em>Not set</em></span>
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-clock me-2 text-info"></i>Meal Timings</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><i class="bi bi-sunrise text-warning me-2"></i><strong>Breakfast:</strong> 7:00 AM - 9:00 AM</li>
+                        <li class="mb-2"><i class="bi bi-sun text-info me-2"></i><strong>Lunch:</strong> 12:00 PM - 2:00 PM</li>
+                        <li><i class="bi bi-moon text-dark me-2"></i><strong>Dinner:</strong> 7:00 PM - 9:00 PM</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-info-circle me-2 text-success"></i>Important Notes</h5>
+                    <ul class="mb-0">
+                        <li>Present your digital ID card for check-in</li>
+                        <li>Menu items may change based on availability</li>
+                        <li>Special dietary requirements? Contact the mess office</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

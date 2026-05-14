@@ -1,0 +1,158 @@
+@{
+    ViewData["Title"] = "Payment Checkout";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="bi bi-credit-card"></i> Payment Checkout</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h5><i class="bi bi-info-circle"></i> Payment Details</h5>
+                        <hr>
+                        <p><strong>Student:</strong> @ViewBag.StudentName</p>
+                        <p><strong>Unpaid Attendances:</strong> @ViewBag.UnpaidCount</p>
+                        <h4><strong>Total Amount:</strong> PKR @ViewBag.TotalAmount</h4>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <h6><i class="bi bi-shield-check"></i> Test Payment Mode</h6>
+                        <p class="mb-2">This is a test payment system. Use the following test card:</p>
+                        <ul class="mb-0">
+                            <li><strong>Card Number:</strong> 4242 4242 4242 4242</li>
+                            <li><strong>Expiry:</strong> Any future date (e.g., 12/25)</li>
+                            <li><strong>CVC:</strong> Any 3 digits (e.g., 123)</li>
+                            <li><strong>ZIP:</strong> Any 5 digits (e.g., 12345)</li>
+                        </ul>
+                    </div>
+
+                    <button id="checkoutButton" class="btn btn-success btn-lg w-100">
+                        <i class="bi bi-lock-fill"></i> Proceed to Secure Payment
+                    </button>
+
+                    <div class="text-center mt-3">
+                        <a asp-action="Dashboard" asp-controller="Student" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        const publishableKey = '@(ViewContext.HttpContext.RequestServices.GetService<IConfiguration>()["Stripe:PublishableKey"])';
+        const useStripe = publishableKey && publishableKey.startsWith('pk_test_');
+        const stripe = useStripe ? Stripe(publishableKey) : null;
+        const checkoutButton = document.getElementById('checkoutButton');
+
+        checkoutButton.addEventListener('click', async () => {
+            checkoutButton.disabled = true;
+            checkoutButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
+
+            try {
+                const response = await fetch('/Payment/CreateCheckoutSession', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    if (data.useStripe && stripe) {
+                        // Real Stripe checkout
+                        const result = await stripe.redirectToCheckout({
+                            sessionId: data.sessionId
+                        });
+
+                        if (result.error) {
+                            alert(result.error.message);
+                            checkoutButton.disabled = false;
+                            checkoutButton.innerHTML = '<i class="bi bi-lock-fill"></i> Proceed to Secure Payment';
+                        }
+                    } else {
+                        // Mock payment - show card input
+                        showMockPaymentForm(data.paymentId);
+                    }
+                } else {
+                    alert('Error: ' + data.message);
+                    checkoutButton.disabled = false;
+                    checkoutButton.innerHTML = '<i class="bi bi-lock-fill"></i> Proceed to Secure Payment';
+                }
+            } catch (error) {
+                alert('An error occurred. Please try again.');
+                checkoutButton.disabled = false;
+                checkoutButton.innerHTML = '<i class="bi bi-lock-fill"></i> Proceed to Secure Payment';
+            }
+        });
+
+        function showMockPaymentForm(paymentId) {
+            const cardForm = `
+                <div class="card mt-3 border-success">
+                    <div class="card-body">
+                        <h5><i class="bi bi-credit-card"></i> Enter Card Details (Mock Payment)</h5>
+                        <div class="mb-3">
+                            <label class="form-label">Card Number</label>
+                            <input type="text" class="form-control" id="mockCardNumber" value="4242424242424242" maxlength="16" placeholder="4242 4242 4242 4242">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Expiry Date</label>
+                                <input type="text" class="form-control" value="12/25" placeholder="MM/YY">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">CVC</label>
+                                <input type="text" class="form-control" value="123" maxlength="3" placeholder="123">
+                            </div>
+                        </div>
+                        <button onclick="processMockPayment(${paymentId})" class="btn btn-success w-100" id="mockPayButton">
+                            <i class="bi bi-check-circle"></i> Complete Payment
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            checkoutButton.parentElement.innerHTML += cardForm;
+        }
+
+        async function processMockPayment(paymentId) {
+            const cardNumber = document.getElementById('mockCardNumber').value;
+            const payButton = document.getElementById('mockPayButton');
+            
+            payButton.disabled = true;
+            payButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
+
+            try {
+                const response = await fetch('/Payment/ProcessMockPayment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ paymentId: paymentId, cardNumber: cardNumber })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    window.location.href = '/Payment/MockSuccess?payment_id=' + data.paymentId;
+                } else {
+                    alert('Error: ' + data.message);
+                    payButton.disabled = false;
+                    payButton.innerHTML = '<i class="bi bi-check-circle"></i> Complete Payment';
+                }
+            } catch (error) {
+                alert('An error occurred. Please try again.');
+                payButton.disabled = false;
+                payButton.innerHTML = '<i class="bi bi-check-circle"></i> Complete Payment';
+            }
+        }
+    </script>
+}

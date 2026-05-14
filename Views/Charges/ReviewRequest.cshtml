@@ -1,0 +1,161 @@
+@model Semester_Project.Models.BillRecheckRequest
+
+@{
+    ViewData["Title"] = "Review Bill Recheck Request";
+    var attendances = ViewBag.Attendances as List<Semester_Project.Models.Attendance>;
+    var monthName = new DateTime(Model.Year, Model.Month, 1).ToString("MMMM");
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h3 class="mb-0"><i class="bi bi-search"></i> Review Bill Recheck Request</h3>
+                </div>
+                <div class="card-body">
+                    <h5>Student Information</h5>
+                    <hr>
+                    @if (Model.Student != null)
+                    {
+                        <p><strong>Name:</strong> @Model.Student.Name</p>
+                        <p><strong>Email:</strong> @Model.Student.Email</p>
+                        <p><strong>Permanent ID:</strong> @Model.Student.PermanentID</p>
+                        <p><strong>Membership:</strong> @Model.Student.MembershipType</p>
+                    }
+                    else
+                    {
+                        <p class="text-danger">Student information not available</p>
+                    }
+
+                    <h5 class="mt-4">Request Details</h5>
+                    <hr>
+                    <p><strong>Month/Year:</strong> @monthName @Model.Year</p>
+                    <p><strong>Requested On:</strong> @Model.RequestedAt.ToString("dd MMM yyyy, hh:mm tt")</p>
+                    <p><strong>Status:</strong> 
+                        @if (Model.Status == "Pending")
+                        {
+                            <span class="badge bg-warning">Pending</span>
+                        }
+                        else if (Model.Status == "Reviewed")
+                        {
+                            <span class="badge bg-info">Reviewed</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">Resolved</span>
+                        }
+                    </p>
+
+                    <div class="alert alert-light">
+                        <strong>Student's Message:</strong><br>
+                        @Model.RequestMessage
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.AdminResponse))
+                    {
+                        <div class="alert alert-success">
+                            <strong>Your Response:</strong><br>
+                            @Model.AdminResponse
+                            <br><small class="text-muted">Reviewed on: @Model.ReviewedAt?.ToString("dd MMM yyyy, hh:mm tt")</small>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Response Form -->
+            @if (Model.Status == "Pending" || Model.Status == "Reviewed")
+            {
+                <div class="card shadow mt-3">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-reply"></i> Respond to Request</h5>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="RespondToRequest" method="post">
+                            <input type="hidden" name="id" value="@Model.Id" />
+
+                            <div class="mb-3">
+                                <label class="form-label">Your Response</label>
+                                <textarea name="response" class="form-control" rows="4" required placeholder="Enter your response to the student...">@Model.AdminResponse</textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Status</label>
+                                <select name="status" class="form-select" required>
+                                    <option value="Reviewed" selected>Reviewed</option>
+                                    <option value="Resolved">Resolved</option>
+                                </select>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-send"></i> Send Response
+                                </button>
+                                <a asp-action="BillRecheckRequests" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-left"></i> Back to Requests
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="mt-3">
+                    <a asp-action="BillRecheckRequests" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Requests
+                    </a>
+                </div>
+            }
+        </div>
+
+        <!-- Attendance Records -->
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0"><i class="bi bi-calendar-check"></i> Attendance Records</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>@monthName @Model.Year</strong></p>
+                    @if (attendances != null)
+                    {
+                        <p>Total Attendances: <strong>@attendances.Count</strong></p>
+                        <p>Total Amount: <strong>PKR @attendances.Sum(a => a.Amount)</strong></p>
+                    }
+                    else
+                    {
+                        <p>Total Attendances: <strong>0</strong></p>
+                        <p>Total Amount: <strong>PKR 0</strong></p>
+                    }
+                    <hr>
+                    <div style="max-height: 400px; overflow-y: auto;">
+                        @if (attendances != null && attendances.Any())
+                        {
+                            @foreach (var att in attendances)
+                            {
+                                <div class="border-bottom pb-2 mb-2">
+                                    <small>
+                                        <strong>@att.Date.ToString("dd MMM, hh:mm tt")</strong><br>
+                                        @att.MealType - PKR @att.Amount<br>
+                                        @if (att.IsPaid)
+                                        {
+                                            <span class="badge bg-success">Paid</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Unpaid</span>
+                                        }
+                                    </small>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-muted">No attendance records</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,116 @@
+@model IEnumerable<Semester_Project.Models.Student>
+@{
+    ViewData["Title"] = "Registered Students";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary mb-4"><i class="bi bi-people me-2"></i>Registered Students</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>No students registered yet.
+        </div>
+    }
+    else
+    {
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>#</th>
+                                <th>Permanent ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Registered On</th>
+                                <th>Last Login</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var student in Model.Select((s, index) => new { Student = s, Index = index + 1 }))
+                            {
+                                <tr>
+                                    <td>@student.Index</td>
+                                    <td><strong class="text-primary" style="letter-spacing: 1px;">@student.Student.PermanentID</strong></td>
+                                    <td><strong>@student.Student.Name</strong></td>
+                                    <td>@student.Student.Email</td>
+                                    <td>@student.Student.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                    <td>
+                                        @if (student.Student.LastLoginAt.HasValue)
+                                        {
+                                            @student.Student.LastLoginAt.Value.ToString("MMM dd, yyyy hh:mm tt")
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Never</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (student.Student.IsVerified)
+                                        {
+                                            <span class="badge bg-success">Verified</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning">Pending</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger btn-sm delete-student" 
+                                                data-id="@student.Student.Id" 
+                                                data-name="@student.Student.Name"
+                                                title="Remove Student">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-3">
+                    <p class="text-muted">Total Students: <strong>@Model.Count()</strong></p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.delete-student').click(function() {
+                const studentId = $(this).data('id');
+                const studentName = $(this).data('name');
+                
+                if (confirm(`Are you sure you want to delete ${studentName}?\n\nThis will permanently remove the student and all their attendance records. This action cannot be undone.`)) {
+                    const button = $(this);
+                    button.prop('disabled', true).html('<i class="bi bi-hourglass-split"></i> Deleting...');
+                    
+                    $.ajax({
+                        url: '/AdminMenu/DeleteStudent',
+                        type: 'POST',
+                        data: { id: studentId },
+                        success: function(response) {
+                            if (response.success) {
+                                alert(response.message);
+                                location.reload();
+                            } else {
+                                alert('Error: ' + response.message);
+                                button.prop('disabled', false).html('<i class="bi bi-trash"></i> Delete');
+                            }
+                        },
+                        error: function() {
+                            alert('An error occurred while deleting the student.');
+                            button.prop('disabled', false).html('<i class="bi bi-trash"></i> Delete');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,93 @@
+@model List<Semester_Project.Models.Payment>
+
+@{
+    ViewData["Title"] = "Payment History";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0"><i class="bi bi-clock-history"></i> Payment History</h3>
+        </div>
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Description</th>
+                                <th>Card</th>
+                                <th>Transaction ID</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var payment in Model)
+                            {
+                                <tr>
+                                    <td>@payment.CreatedAt.ToString("dd MMM yyyy hh:mm tt")</td>
+                                    <td><strong>PKR @payment.Amount</strong></td>
+                                    <td>
+                                        @if (payment.PaymentStatus == "Succeeded")
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle"></i> @payment.PaymentStatus
+                                            </span>
+                                        }
+                                        else if (payment.PaymentStatus == "Failed")
+                                        {
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-x-circle"></i> @payment.PaymentStatus
+                                            </span>
+                                        }
+                                        else if (payment.PaymentStatus == "Canceled")
+                                        {
+                                            <span class="badge bg-warning">
+                                                <i class="bi bi-exclamation-circle"></i> @payment.PaymentStatus
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                <i class="bi bi-hourglass-split"></i> @payment.PaymentStatus
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>@payment.Description</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(payment.CardBrand) && !string.IsNullOrEmpty(payment.CardLast4))
+                                        {
+                                            <span>@payment.CardBrand **** @payment.CardLast4</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">N/A</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">@payment.StripePaymentIntentId?.Substring(0, Math.Min(20, payment.StripePaymentIntentId.Length))...</small>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info text-center">
+                    <i class="bi bi-info-circle"></i> No payment history found.
+                </div>
+            }
+
+            <div class="text-center mt-3">
+                <a asp-action="Dashboard" asp-controller="Student" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

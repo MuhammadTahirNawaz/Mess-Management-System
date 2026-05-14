@@ -1,0 +1,105 @@
+@{
+    ViewData["Title"] = "Verify OTP";
+}
+
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <div class="mb-3">
+                            <i class="bi bi-shield-check text-primary" style="font-size: 4rem;"></i>
+                        </div>
+                        <h2 class="fw-bold text-primary">Verify OTP</h2>
+                        <p class="text-muted">Enter the 6-digit code sent to your email</p>
+                        <p class="text-muted small">
+                            <i class="bi bi-envelope-fill me-1"></i>@ViewBag.Email
+                        </p>
+                    </div>
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["Error"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form asp-action="VerifyOTP" asp-controller="Admin" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="email" value="@ViewBag.Email" />
+                        
+                        <div class="mb-4">
+                            <label for="otp" class="form-label fw-semibold text-center d-block">
+                                Enter OTP Code
+                            </label>
+                            <input type="text" 
+                                   class="form-control form-control-lg text-center fs-3 letter-spacing-wide" 
+                                   id="otp" 
+                                   name="otp" 
+                                   placeholder="000000" 
+                                   maxlength="6" 
+                                   pattern="[0-9]{6}"
+                                   required
+                                   autocomplete="off"
+                                   style="letter-spacing: 10px; font-weight: 600;">
+                            <div class="form-text text-center">
+                                The OTP is valid for 10 minutes.
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle me-2"></i>Verify OTP
+                            </button>
+                        </div>
+
+                        <div class="text-center">
+                            <a asp-action="Login" asp-controller="Admin" class="text-decoration-none">
+                                <i class="bi bi-arrow-left me-1"></i>Back to Login
+                            </a>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="text-center">
+                        <small class="text-muted d-block mb-2">Didn't receive the code?</small>
+                        <a asp-action="Login" asp-controller="Admin" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-arrow-repeat me-1"></i>Request New OTP
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    <i class="bi bi-info-circle me-1"></i>Check your spam folder if you don't see the email.
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-focus on OTP input
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('otp').focus();
+        });
+
+        // Only allow numbers in OTP field
+        document.getElementById('otp').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    </script>
+}

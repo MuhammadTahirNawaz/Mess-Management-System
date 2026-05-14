@@ -1,0 +1,213 @@
+@model Semester_Project.Models.Student
+@{
+    ViewData["Title"] = "Digital ID Card";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary"><i class="bi bi-credit-card-2-front me-2"></i>Digital Student ID Card</h2>
+        <a asp-action="Dashboard" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <!-- Digital ID Card -->
+            <div class="card shadow-lg border-primary" style="border-width: 3px; border-radius: 15px; overflow: hidden;">
+                <div class="card-header text-white text-center py-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h4 class="mb-1"><i class="bi bi-building me-2"></i>University of Engineering & Technology</h4>
+                    <p class="mb-0 small">Mess Management System - Lahore, Pakistan</p>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5 class="text-primary mb-3">Student Information</h5>
+                            
+                            <div class="mb-3">
+                                <label class="text-muted small">Full Name</label>
+                                <h6 class="fw-bold">@Model.Name</h6>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="text-muted small">Permanent ID</label>
+                                <h3 class="fw-bold text-primary mb-0" style="letter-spacing: 2px;">@Model.PermanentID</h3>
+                                <small class="text-muted">Present this ID for check-in</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="text-muted small">Email Address</label>
+                                <p class="mb-0">@Model.Email</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="text-muted small">Registration Date</label>
+                                <p class="mb-0">@Model.CreatedAt.ToString("dd MMM yyyy")</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="text-muted small">Current Balance</label>
+                                <h5 class="fw-bold text-danger">PKR @ViewBag.CurrentBalance.ToString("N2")</h5>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="text-muted small">Status</label>
+                                <div>
+                                    @if (Model.IsVerified)
+                                    {
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle me-1"></i>Verified
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning">
+                                            <i class="bi bi-exclamation-circle me-1"></i>Pending
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 text-center">
+                            <div class="mb-3">
+                                <label class="text-muted small d-block mb-2">QR Code</label>
+                                <div class="p-2 bg-white border rounded">
+                                    <img src="data:image/png;base64,@ViewBag.QRCode" 
+                                         alt="QR Code" 
+                                         class="img-fluid" 
+                                         style="max-width: 150px;" />
+                                </div>
+                            </div>
+                            <p class="small text-muted">Scan for quick check-in</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light text-center py-3">
+                    <p class="mb-0 small text-muted">
+                        <i class="bi bi-shield-check me-1"></i>This card is valid for mess services
+                    </p>
+                    <p class="mb-0 small text-muted">
+                        <i class="bi bi-info-circle me-1"></i>Present this card at the mess counter for check-in
+                    </p>
+                </div>
+            </div>
+
+            <!-- OTP Display Card (shown when OTP is generated) -->
+            <div id="otpCard" class="card shadow-lg border-success mt-4" style="display: none; border-width: 3px;">
+                <div class="card-header bg-success text-white text-center py-3">
+                    <h5 class="mb-0"><i class="bi bi-shield-lock me-2"></i>Your Check-In OTP</h5>
+                </div>
+                <div class="card-body text-center py-5">
+                    <p class="text-muted mb-2">Tell this code to the admin to complete check-in:</p>
+                    <h1 class="display-1 fw-bold text-success mb-3" id="otpDisplay" style="letter-spacing: 15px;">----</h1>
+                    <p class="text-muted small mb-0">
+                        <i class="bi bi-clock me-1"></i>Generated at: <span id="otpTime">--:--</span>
+                    </p>
+                    <p class="text-danger small mt-2">
+                        <i class="bi bi-exclamation-triangle me-1"></i>Valid for 5 minutes only
+                    </p>
+                </div>
+            </div>
+
+            <!-- Download/Print Options -->
+            <div class="text-center mt-4">
+                <button class="btn btn-lg btn-primary me-2 px-4" onclick="window.print()" style="border-radius: 10px;">
+                    <i class="bi bi-printer me-2"></i>Print Card
+                </button>
+                <button class="btn btn-lg btn-success px-4" onclick="downloadCard()" style="border-radius: 10px;">
+                    <i class="bi bi-download me-2"></i>Download as PNG
+                </button>
+            </div>
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Download will save a high-quality image of your ID card
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        function downloadCard() {
+            const downloadBtn = event.target;
+            const originalText = downloadBtn.innerHTML;
+            downloadBtn.disabled = true;
+            downloadBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Generating...';
+            
+            // Hide buttons temporarily
+            const buttonsDiv = document.querySelector('.text-center.mt-4');
+            buttonsDiv.style.display = 'none';
+            
+            // Hide OTP card if visible
+            const otpCard = document.getElementById('otpCard');
+            const otpWasVisible = otpCard.style.display !== 'none';
+            otpCard.style.display = 'none';
+            
+            const cardElement = document.querySelector('.card.shadow-lg.border-primary');
+            
+            html2canvas(cardElement, {
+                scale: 2,
+                backgroundColor: '#ffffff',
+                logging: false,
+                useCORS: true
+            }).then(canvas => {
+                // Convert to blob and download
+                canvas.toBlob(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.download = 'Student_ID_Card_@(Model.PermanentID).png';
+                    link.href = url;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                    
+                    // Restore UI
+                    buttonsDiv.style.display = 'block';
+                    if (otpWasVisible) otpCard.style.display = 'block';
+                    downloadBtn.disabled = false;
+                    downloadBtn.innerHTML = originalText;
+                }, 'image/png');
+            }).catch(error => {
+                console.error('Error generating image:', error);
+                alert('Error generating image. Please try print option.');
+                buttonsDiv.style.display = 'block';
+                if (otpWasVisible) otpCard.style.display = 'block';
+                downloadBtn.disabled = false;
+                downloadBtn.innerHTML = originalText;
+            });
+        }
+
+        // Poll for OTP every 2 seconds
+        setInterval(async function() {
+            try {
+                const response = await fetch('@Url.Action("GetCurrentOTP", "Student")');
+                const data = await response.json();
+
+                if (data.success && data.hasOTP) {
+                    document.getElementById('otpDisplay').textContent = data.otp;
+                    document.getElementById('otpTime').textContent = data.generatedAt;
+                    document.getElementById('otpCard').style.display = 'block';
+                } else {
+                    document.getElementById('otpCard').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error fetching OTP:', error);
+            }
+        }, 2000); // Check every 2 seconds
+    </script>
+}
+
+<style>
+    @@media print {
+        .btn, .card-footer, nav, footer {
+            display: none !important;
+        }
+        .card {
+            border: 3px solid #0d6efd !important;
+            box-shadow: none !important;
+        }
+    }
+</style>

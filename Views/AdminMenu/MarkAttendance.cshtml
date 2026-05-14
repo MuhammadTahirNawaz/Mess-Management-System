@@ -1,0 +1,131 @@
+@model IEnumerable<Semester_Project.Models.Student>
+@{
+    ViewData["Title"] = "Mark Attendance";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary mb-4"><i class="bi bi-clipboard-check me-2"></i>Mark Attendance</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form asp-action="SaveAttendance" method="post" id="attendanceForm">
+                @Html.AntiForgeryToken()
+                
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label for="date" class="form-label"><strong>Date</strong></label>
+                        <input type="date" id="date" name="date" class="form-control" value="@ViewBag.TodayDate" required />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="mealType" class="form-label"><strong>Meal Type</strong></label>
+                        <select id="mealType" name="mealType" class="form-select" required>
+                            <option value="">Select Meal</option>
+                            <option value="Breakfast">Breakfast</option>
+                            <option value="Lunch">Lunch</option>
+                            <option value="Dinner">Dinner</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="button" class="btn btn-secondary me-2" onclick="selectAll()">
+                            <i class="bi bi-check-all me-1"></i>Select All
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="deselectAll()">
+                            <i class="bi bi-x-lg me-1"></i>Deselect All
+                        </button>
+                    </div>
+                </div>
+
+                @if (!Model.Any())
+                {
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>No students registered yet.
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th width="50">
+                                        <input type="checkbox" id="selectAllCheckbox" onclick="toggleAll(this)" />
+                                    </th>
+                                    <th>#</th>
+                                    <th>Student Name</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var student in Model.Select((s, index) => new { Student = s, Index = index + 1 }))
+                                {
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="studentIds" value="@student.Student.Id" class="student-checkbox" />
+                                        </td>
+                                        <td>@student.Index</td>
+                                        <td><strong>@student.Student.Name</strong></td>
+                                        <td>@student.Student.Email</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-save me-2"></i>Save Attendance
+                        </button>
+                    </div>
+                }
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleAll(checkbox) {
+            const checkboxes = document.querySelectorAll('.student-checkbox');
+            checkboxes.forEach(cb => cb.checked = checkbox.checked);
+        }
+
+        function selectAll() {
+            const checkboxes = document.querySelectorAll('.student-checkbox');
+            checkboxes.forEach(cb => cb.checked = true);
+            document.getElementById('selectAllCheckbox').checked = true;
+        }
+
+        function deselectAll() {
+            const checkboxes = document.querySelectorAll('.student-checkbox');
+            checkboxes.forEach(cb => cb.checked = false);
+            document.getElementById('selectAllCheckbox').checked = false;
+        }
+
+        // Update "select all" checkbox state when individual checkboxes change
+        document.querySelectorAll('.student-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const allCheckboxes = document.querySelectorAll('.student-checkbox');
+                const allChecked = Array.from(allCheckboxes).every(cb => cb.checked);
+                document.getElementById('selectAllCheckbox').checked = allChecked;
+            });
+        });
+    </script>
+}

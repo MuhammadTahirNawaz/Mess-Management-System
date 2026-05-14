@@ -1,0 +1,596 @@
+@{
+    ViewData["Title"] = "Student Check-In";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary mb-4"><i class="bi bi-qr-code-scan me-2"></i>Student Check-In</h2>
+
+    <div class="row">
+        <!-- Check-In Form -->
+        <div class="col-lg-5">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-search me-2"></i>Enter Permanent ID</h5>
+                </div>
+                <div class="card-body">
+                    <form id="verifyForm">
+                        <div class="mb-3">
+                            <label for="permanentId" class="form-label"><strong>Permanent ID</strong></label>
+                            <input type="text" 
+                                   id="permanentId" 
+                                   class="form-control form-control-lg" 
+                                   placeholder="UET-2025-XXXX" 
+                                   autofocus 
+                                   required />
+                            <small class="text-muted">Enter or scan student's Permanent ID</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="bi bi-search me-2"></i>Verify Student
+                        </button>
+                    </form>
+
+                    <div id="alert-container" class="mt-3"></div>
+                </div>
+            </div>
+
+            <!-- Quick Info -->
+            <div class="card shadow mt-3">
+                <div class="card-body">
+                    <h6 class="text-primary"><i class="bi bi-info-circle me-2"></i>3-Step Verification:</h6>
+                    <ol class="small mb-0">
+                        <li><strong>Step 1:</strong> Enter student's Permanent ID</li>
+                        <li><strong>Step 2:</strong> Scan student's QR code from their digital card</li>
+                        <li><strong>Step 3:</strong> Ask student for OTP and verify</li>
+                        <li><strong>Final:</strong> Select meal and complete check-in</li>
+                    </ol>
+                    <div class="alert alert-info mt-2 mb-0 small">
+                        <i class="bi bi-shield-check me-1"></i>
+                        <strong>Triple Security:</strong> ID + QR + OTP prevents fraud
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Information Panel -->
+        <div class="col-lg-7">
+            <div id="studentInfoPanel" class="card shadow" style="display: none;">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-person-check me-2"></i>Student Verified - Step <span id="currentStep">1</span>/3</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong>Name:</strong> <span id="studentName"></span></p>
+                            <p class="mb-2"><strong>Permanent ID:</strong> <span id="studentId"></span></p>
+                            <p class="mb-2"><strong>Email:</strong> <span id="studentEmail"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong>Current Balance:</strong> <span id="studentBalance" class="text-danger fw-bold"></span></p>
+                            <p class="mb-2"><strong>Today's Meals:</strong> <span id="todayMeals" class="badge bg-info"></span></p>
+                            <p class="mb-2"><strong>Status:</strong> <span id="studentStatus"></span></p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Step 2: QR Code Scanning -->
+                    <div id="qrScanSection">
+                        <h6 class="text-warning mb-3"><i class="bi bi-qr-code-scan me-2"></i>Step 2: Scan Student's QR Code</h6>
+                        <div class="alert alert-warning">
+                            <i class="bi bi-camera me-2"></i>
+                            <strong>Two Options:</strong> Use camera to scan OR upload QR code image
+                        </div>
+
+                        <!-- Tab Navigation -->
+                        <ul class="nav nav-tabs mb-3" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="camera-tab" data-bs-toggle="tab" data-bs-target="#camera-pane" type="button" role="tab">
+                                    <i class="bi bi-camera-video me-1"></i> Camera Scan
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload-pane" type="button" role="tab">
+                                    <i class="bi bi-file-image me-1"></i> Upload Image
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="manual-tab" data-bs-toggle="tab" data-bs-target="#manual-pane" type="button" role="tab">
+                                    <i class="bi bi-keyboard me-1"></i> Manual Entry
+                                </button>
+                            </li>
+                        </ul>
+
+                        <!-- Tab Content -->
+                        <div class="tab-content">
+                            <!-- Camera Scan Tab -->
+                            <div class="tab-pane fade show active" id="camera-pane" role="tabpanel">
+                                <div class="mb-3">
+                                    <div id="qr-reader" style="width: 100%; max-width: 500px; margin: 0 auto;"></div>
+                                    <div id="qr-reader-results" class="mt-2"></div>
+                                </div>
+                                <button type="button" class="btn btn-primary w-100" id="startCameraBtn" onclick="startQRCamera()">
+                                    <i class="bi bi-camera-video me-2"></i>Start Camera
+                                </button>
+                                <button type="button" class="btn btn-danger w-100 mt-2" id="stopCameraBtn" style="display: none;" onclick="stopQRCamera()">
+                                    <i class="bi bi-stop-circle me-2"></i>Stop Camera
+                                </button>
+                            </div>
+
+                            <!-- Upload Image Tab -->
+                            <div class="tab-pane fade" id="upload-pane" role="tabpanel">
+                                <div class="mb-3">
+                                    <label for="qrImageUpload" class="form-label"><strong>Upload QR Code Image</strong></label>
+                                    <input type="file" 
+                                           id="qrImageUpload" 
+                                           class="form-control" 
+                                           accept="image/*"
+                                           onchange="processQRImage(this)" />
+                                    <small class="text-muted">Upload a screenshot or photo of the student's digital ID card</small>
+                                </div>
+                                <div id="uploadPreview" class="text-center mb-3" style="display: none;">
+                                    <img id="uploadedImage" src="" alt="Uploaded QR" style="max-width: 300px; max-height: 300px;" class="img-thumbnail" />
+                                </div>
+                                <canvas id="qrCanvas" style="display: none;"></canvas>
+                            </div>
+
+                            <!-- Manual Entry Tab -->
+                            <div class="tab-pane fade" id="manual-pane" role="tabpanel">
+                                <div class="mb-3">
+                                    <label for="qrDataInput" class="form-label"><strong>QR Code Data</strong></label>
+                                    <input type="text" 
+                                           id="qrDataInput" 
+                                           class="form-control form-control-lg" 
+                                           placeholder="Paste QR data (PermanentID|Secret)" />
+                                    <small class="text-muted">Manually paste the QR code data</small>
+                                </div>
+                                <button type="button" class="btn btn-warning btn-lg w-100" onclick="verifyQRCode()">
+                                    <i class="bi bi-check-circle me-2"></i>Verify QR Data
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="qrResult" class="mt-3"></div>
+                    </div>
+
+                    <!-- Step 3: OTP Verification -->
+                    <div id="otpSection" style="display: none;">
+                        <h6 class="text-primary mb-3"><i class="bi bi-shield-check me-2"></i>Step 3: Enter Student's OTP</h6>
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle me-2"></i>
+                            <strong>QR Verified!</strong> OTP has been sent to student's device. Ask them for the 4-digit code.
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" 
+                                   id="otpInput" 
+                                   class="form-control form-control-lg text-center" 
+                                   placeholder="Enter 4-digit OTP" 
+                                   maxlength="4"
+                                   pattern="[0-9]{4}"
+                                   style="font-size: 2rem; letter-spacing: 10px;" />
+                        </div>
+
+                        <h6 class="text-primary mb-3"><i class="bi bi-calendar-check me-2"></i>Select Meal Type</h6>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-warning btn-lg w-100" onclick="checkIn('Breakfast')">
+                                    <i class="bi bi-sunrise d-block" style="font-size: 2rem;"></i>
+                                    Breakfast
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-info btn-lg w-100" onclick="checkIn('Lunch')">
+                                    <i class="bi bi-sun d-block" style="font-size: 2rem;"></i>
+                                    Lunch
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-dark btn-lg w-100" onclick="checkIn('Dinner')">
+                                    <i class="bi bi-moon d-block" style="font-size: 2rem;"></i>
+                                    Dinner
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="checkInResult" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- No Student Panel -->
+            <div id="noStudentPanel" class="card shadow">
+                <div class="card-body text-center py-5">
+                    <i class="bi bi-person-x text-muted" style="font-size: 5rem;"></i>
+                    <h5 class="text-muted mt-3">No Student Verified</h5>
+                    <p class="text-muted">Enter a Permanent ID to verify student and proceed with check-in</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- QR Code Scanner Libraries -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+
+    <script>
+        let currentStudentId = null;
+        let currentStep = 1;
+        let html5QrCode = null;
+        let qrDataExtracted = null;
+
+        // Step 1: Verify Permanent ID
+        document.getElementById('verifyForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const permanentId = document.getElementById('permanentId').value.trim();
+            const alertContainer = document.getElementById('alert-container');
+            alertContainer.innerHTML = '<div class="spinner-border spinner-border-sm text-primary" role="status"></div> Verifying Step 1...';
+
+            try {
+                const response = await fetch('@Url.Action("VerifyStudent", "AdminMenu")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `permanentId=${encodeURIComponent(permanentId)}`
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Show student info
+                    currentStudentId = data.student.id;
+                    currentStep = 1;
+                    document.getElementById('currentStep').textContent = currentStep;
+                    document.getElementById('studentName').textContent = data.student.name;
+                    document.getElementById('studentId').textContent = data.student.permanentId;
+                    document.getElementById('studentEmail').textContent = data.student.email;
+                    document.getElementById('studentBalance').textContent = 'PKR ' + data.student.balance.toFixed(2);
+                    document.getElementById('todayMeals').textContent = data.student.todayMeals;
+                    
+                    const statusSpan = document.getElementById('studentStatus');
+                    if (data.student.isVerified) {
+                        statusSpan.innerHTML = '<span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Verified</span>';
+                    } else {
+                        statusSpan.innerHTML = '<span class="badge bg-warning"><i class="bi bi-exclamation-circle me-1"></i>Pending</span>';
+                    }
+
+                    document.getElementById('noStudentPanel').style.display = 'none';
+                    document.getElementById('studentInfoPanel').style.display = 'block';
+                    document.getElementById('qrScanSection').style.display = 'block';
+                    document.getElementById('otpSection').style.display = 'none';
+                    document.getElementById('checkInResult').innerHTML = '';
+                    document.getElementById('qrDataInput').value = '';
+                    document.getElementById('qrDataInput').focus();
+                    
+                    alertContainer.innerHTML = '<div class="alert alert-success mb-0"><i class="bi bi-check-circle me-2"></i>Step 1 Complete: Student ID verified! Now scan QR code.</div>';
+                } else {
+                    alertContainer.innerHTML = `<div class="alert alert-danger mb-0"><i class="bi bi-x-circle me-2"></i>${data.message}</div>`;
+                    document.getElementById('studentInfoPanel').style.display = 'none';
+                    document.getElementById('noStudentPanel').style.display = 'block';
+                }
+            } catch (error) {
+                alertContainer.innerHTML = '<div class="alert alert-danger mb-0"><i class="bi bi-x-circle me-2"></i>An error occurred. Please try again.</div>';
+            }
+        });
+
+        // Step 2: Verify QR Code
+        async function verifyQRCode() {
+            if (!currentStudentId) {
+                alert('Please verify student ID first (Step 1).');
+                return;
+            }
+
+            const qrData = document.getElementById('qrDataInput').value.trim();
+            if (!qrData) {
+                alert('Please scan or enter the QR code data.');
+                return;
+            }
+
+            // Parse QR data format: PermanentID|Secret
+            const parts = qrData.split('|');
+            if (parts.length !== 2) {
+                document.getElementById('qrResult').innerHTML = 
+                    '<div class="alert alert-danger"><i class="bi bi-x-circle me-2"></i>Invalid QR code format. Please scan the student\'s digital ID card.</div>';
+                return;
+            }
+
+            const qrSecret = parts[1];
+            const resultDiv = document.getElementById('qrResult');
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm text-warning" role="status"></div> Verifying QR code...';
+
+            try {
+                const response = await fetch('@Url.Action("VerifyQRCode", "AdminMenu")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `studentId=${currentStudentId}&qrSecret=${encodeURIComponent(qrSecret)}`
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentStep = 2;
+                    document.getElementById('currentStep').textContent = currentStep;
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle me-2"></i>${data.message}
+                        </div>
+                    `;
+                    
+                    // Move to Step 3
+                    document.getElementById('qrScanSection').style.display = 'none';
+                    document.getElementById('otpSection').style.display = 'block';
+                    currentStep = 3;
+                    document.getElementById('currentStep').textContent = currentStep;
+                    document.getElementById('otpInput').value = '';
+                    document.getElementById('otpInput').focus();
+                } else {
+                    resultDiv.innerHTML = `<div class="alert alert-danger"><i class="bi bi-x-circle me-2"></i>${data.message}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="alert alert-danger"><i class="bi bi-x-circle me-2"></i>An error occurred during QR verification.</div>';
+            }
+        }
+
+        // Step 3: Verify OTP and Complete Check-in
+        async function checkIn(mealType) {
+            if (!currentStudentId) {
+                alert('Please complete Steps 1 and 2 first.');
+                return;
+            }
+
+            if (currentStep < 3) {
+                alert('Please complete QR code verification first (Step 2).');
+                return;
+            }
+
+            const otp = document.getElementById('otpInput').value.trim();
+            if (!otp || otp.length !== 4) {
+                alert('Please enter the 4-digit OTP provided by the student.');
+                return;
+            }
+
+            const resultDiv = document.getElementById('checkInResult');
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm text-primary" role="status"></div> Processing check-in...';
+
+            try {
+                const response = await fetch('@Url.Action("ProcessCheckIn", "AdminMenu")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `studentId=${currentStudentId}&mealType=${encodeURIComponent(mealType)}&otp=${encodeURIComponent(otp)}`
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            <h6 class="alert-heading"><i class="bi bi-check-circle me-2"></i>Check-In Successful!</h6>
+                            <p class="mb-1"><strong>Meal:</strong> ${mealType} - ${data.menuItem}</p>
+                            <p class="mb-0"><strong>Amount:</strong> PKR ${data.amount.toFixed(2)}</p>
+                        </div>
+                    `;
+                    
+                    // Update today's meals count
+                    const currentCount = parseInt(document.getElementById('todayMeals').textContent);
+                    document.getElementById('todayMeals').textContent = currentCount + 1;
+                    
+                    // Update balance
+                    const currentBalance = parseFloat(document.getElementById('studentBalance').textContent.replace('PKR ', ''));
+                    document.getElementById('studentBalance').textContent = 'PKR ' + (currentBalance + data.amount).toFixed(2);
+                    
+                    // Clear the form after 3 seconds
+                    setTimeout(() => {
+                        document.getElementById('permanentId').value = '';
+                        document.getElementById('studentInfoPanel').style.display = 'none';
+                        document.getElementById('noStudentPanel').style.display = 'block';
+                        document.getElementById('alert-container').innerHTML = '';
+                        currentStudentId = null;
+                        currentStep = 1;
+                        document.getElementById('permanentId').focus();
+                    }, 3000);
+                } else {
+                    resultDiv.innerHTML = `<div class="alert alert-danger"><i class="bi bi-x-circle me-2"></i>${data.message}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="alert alert-danger"><i class="bi bi-x-circle me-2"></i>An error occurred during check-in.</div>';
+            }
+        }
+
+        // Allow Enter key to submit QR verification
+        document.addEventListener('DOMContentLoaded', function() {
+            const qrInput = document.getElementById('qrDataInput');
+            if (qrInput) {
+                qrInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        verifyQRCode();
+                    }
+                });
+            }
+        });
+
+        // ===== QR CODE CAMERA SCANNING =====
+        function startQRCamera() {
+            const qrReaderElement = document.getElementById('qr-reader');
+            
+            if (!html5QrCode) {
+                html5QrCode = new Html5Qrcode("qr-reader");
+            }
+
+            const config = { 
+                fps: 10, 
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0
+            };
+
+            html5QrCode.start(
+                { facingMode: "environment" }, // Use back camera
+                config,
+                (decodedText, decodedResult) => {
+                    // QR Code detected
+                    document.getElementById('qr-reader-results').innerHTML = 
+                        `<div class="alert alert-info"><i class="bi bi-check-circle me-2"></i>QR Detected! Processing...</div>`;
+                    
+                    qrDataExtracted = decodedText;
+                    
+                    // Auto-verify
+                    document.getElementById('qrDataInput').value = decodedText;
+                    stopQRCamera();
+                    verifyQRCodeFromCamera(decodedText);
+                },
+                (errorMessage) => {
+                    // Scanning in progress, ignore errors
+                }
+            ).then(() => {
+                document.getElementById('startCameraBtn').style.display = 'none';
+                document.getElementById('stopCameraBtn').style.display = 'block';
+            }).catch((err) => {
+                alert(`Failed to start camera: ${err}`);
+            });
+        }
+
+        function stopQRCamera() {
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    document.getElementById('startCameraBtn').style.display = 'block';
+                    document.getElementById('stopCameraBtn').style.display = 'none';
+                    document.getElementById('qr-reader-results').innerHTML = '';
+                }).catch((err) => {
+                    console.error('Error stopping camera:', err);
+                });
+            }
+        }
+
+        async function verifyQRCodeFromCamera(qrData) {
+            if (!currentStudentId) {
+                alert('Please verify student ID first (Step 1).');
+                return;
+            }
+
+            // Parse QR data format: PermanentID|Secret
+            const parts = qrData.split('|');
+            if (parts.length !== 2) {
+                document.getElementById('qrResult').innerHTML = 
+                    '<div class="alert alert-danger"><i class="bi bi-x-circle me-2"></i>Invalid QR code format from camera scan.</div>';
+                return;
+            }
+
+            const qrSecret = parts[1];
+            const resultDiv = document.getElementById('qrResult');
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm text-warning" role="status"></div> Verifying scanned QR code...';
+
+            try {
+                const response = await fetch('@Url.Action("VerifyQRCode", "AdminMenu")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `studentId=${currentStudentId}&qrSecret=${encodeURIComponent(qrSecret)}`
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentStep = 2;
+                    document.getElementById('currentStep').textContent = currentStep;
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle me-2"></i>${data.message}
+                        </div>
+                    `;
+                    
+                    // Move to Step 3
+                    document.getElementById('qrScanSection').style.display = 'none';
+                    document.getElementById('otpSection').style.display = 'block';
+                    currentStep = 3;
+                    document.getElementById('currentStep').textContent = currentStep;
+                    document.getElementById('otpInput').value = '';
+                    document.getElementById('otpInput').focus();
+                } else {
+                    resultDiv.innerHTML = `<div class="alert alert-danger"><i class="bi bi-x-circle me-2"></i>${data.message}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="alert alert-danger"><i class="bi bi-x-circle me-2"></i>An error occurred during QR verification.</div>';
+            }
+        }
+
+        // ===== QR CODE IMAGE UPLOAD PROCESSING =====
+        function processQRImage(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const img = document.getElementById('uploadedImage');
+                    img.src = e.target.result;
+                    document.getElementById('uploadPreview').style.display = 'block';
+
+                    // Process the image to extract QR code
+                    decodeQRFromImage(e.target.result);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function decodeQRFromImage(imageSrc) {
+            const resultDiv = document.getElementById('qrResult');
+            resultDiv.innerHTML = '<div class="spinner-border spinner-border-sm text-info" role="status"></div> Decoding QR code from image...';
+
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.getElementById('qrCanvas');
+                const ctx = canvas.getContext('2d');
+                
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+                if (code) {
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle me-2"></i>QR Code detected from image!
+                        </div>
+                    `;
+                    
+                    qrDataExtracted = code.data;
+                    document.getElementById('qrDataInput').value = code.data;
+                    
+                    // Auto-verify
+                    verifyQRCodeFromCamera(code.data);
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="bi bi-x-circle me-2"></i>Could not detect QR code in the image. 
+                            Please ensure the QR code is clear and try again, or use manual entry.
+                        </div>
+                    `;
+                }
+            };
+
+            img.onerror = function() {
+                resultDiv.innerHTML = '<div class="alert alert-danger"><i class="bi bi-x-circle me-2"></i>Failed to load image.</div>';
+            };
+
+            img.src = imageSrc;
+        }
+
+        // Cleanup camera when tab changes
+        document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
+            tab.addEventListener('shown.bs.tab', function(e) {
+                if (e.target.id !== 'camera-tab' && html5QrCode) {
+                    stopQRCamera();
+                }
+            });
+        });
+    </script>
+}

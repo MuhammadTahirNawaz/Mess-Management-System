@@ -1,0 +1,414 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Registration - Mess Management</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .auth-container {
+            max-width: 550px;
+            width: 100%;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .auth-card {
+            background: rgba(15, 20, 40, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 255, 255, 0.3), 0 0 40px rgba(0, 255, 255, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        
+        .auth-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .auth-header {
+            background: linear-gradient(135deg, #0f1428 0%, #1a1f3a 100%);
+            color: white;
+            padding: 40px 30px 30px;
+            text-align: center;
+            position: relative;
+            border-bottom: 2px solid rgba(0, 255, 255, 0.2);
+        }
+        
+        .logo-small {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #00ffff 0%, #00cccc 100%);
+            border-radius: 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5), 0 0 60px rgba(0, 255, 255, 0.3);
+            animation: pulse 3s ease-in-out infinite;
+            color: #0a0e27;
+            font-size: 2rem;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+        }
+        
+        .auth-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .auth-header p {
+            opacity: 0.9;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+        
+        .auth-body {
+            padding: 40px 35px;
+            background: rgba(10, 14, 39, 0.6);
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #00ffff;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(15, 20, 40, 0.8);
+            color: white;
+        }
+        
+        .form-control:focus {
+            border-color: #00ffff;
+            box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.2), 0 0 20px rgba(0, 255, 255, 0.3);
+            transform: translateY(-2px);
+            background: rgba(15, 20, 40, 0.9);
+            color: white;
+        }
+        
+        .form-control::placeholder {
+            color: #6677aa;
+        }
+        
+        .form-control.is-valid {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        .form-control.is-invalid {
+            border-color: #ff0064;
+            background: rgba(255, 0, 100, 0.1);
+        }
+        
+        .btn-register {
+            background: linear-gradient(135deg, #00ffff 0%, #00cccc 100%);
+            border: none;
+            color: #0a0e27;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.4), 0 0 30px rgba(0, 255, 255, 0.2);
+        }
+        
+        .btn-register:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 255, 255, 0.6), 0 0 50px rgba(0, 255, 255, 0.4);
+            background: linear-gradient(135deg, #00ffff 0%, #00ffaa 100%);
+        }
+        
+        .btn-register:active {
+            transform: translateY(0);
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+        }
+        
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(0, 255, 255, 0.2);
+        }
+        
+        .divider span {
+            background: rgba(10, 14, 39, 0.9);
+            padding: 0 15px;
+            position: relative;
+            color: #8899aa;
+            font-size: 0.9rem;
+        }
+        
+        .link-text {
+            color: #00ffff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .link-text:hover {
+            color: #00ffaa;
+            text-decoration: underline;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+        
+        .alert {
+            border-radius: 10px;
+            border: none;
+            animation: slideInDown 0.5s ease-out;
+        }
+        
+        .info-box {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            border-left: 4px solid #4facfe;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            animation: slideInLeft 0.6s ease-out 0.3s both;
+        }
+        
+        .info-box i {
+            color: #4facfe;
+            font-size: 1.2rem;
+        }
+        
+        .back-home {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .back-home a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .back-home a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+        
+        .form-text {
+            font-size: 0.85rem;
+            color: #718096;
+            margin-top: 5px;
+        }
+        
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @@keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @@keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @@keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="logo-small">
+                    <i class="bi bi-person-plus-fill"></i>
+                </div>
+                <h2>Student Registration</h2>
+                <p>Mess Management System</p>
+            </div>
+            
+            <div class="auth-body">
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["Error"]
+                    </div>
+                }
+
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+                    </div>
+                }
+
+                <form asp-action="Register" asp-controller="Student" method="post" id="registerForm">
+                    @Html.AntiForgeryToken()
+                    
+                    <div class="mb-3">
+                        <label for="name" class="form-label">
+                            <i class="bi bi-person me-2"></i>Full Name
+                        </label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="name" 
+                               name="name" 
+                               placeholder="Enter your full name" 
+                               required 
+                               autofocus>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">
+                            <i class="bi bi-envelope me-2"></i>University Email
+                        </label>
+                        <input type="email" 
+                               class="form-control" 
+                               id="email" 
+                               name="email" 
+                               placeholder="yourname@student.uet.edu.pk" 
+                               required>
+                        <div class="form-text">
+                            <i class="bi bi-info-circle me-1"></i>Only <strong>@@student.uet.edu.pk</strong> emails are allowed
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="membershipType" class="form-label">
+                            <i class="bi bi-card-checklist me-2"></i>Membership Type
+                        </label>
+                        <select class="form-select" id="membershipType" name="membershipType" required>
+                            <option value="FullMeal" selected>Full Meal (Breakfast, Lunch & Dinner)</option>
+                            <option value="TeaWater">Tea/Water Only</option>
+                        </select>
+                        <div class="form-text">
+                            <i class="bi bi-info-circle me-1"></i>Select your mess membership type
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <i class="bi bi-lightbulb-fill me-2"></i>
+                        <strong>Note:</strong> After registration, your login credentials will be sent to your email address.
+                    </div>
+
+                    <button type="submit" class="btn btn-register">
+                        <i class="bi bi-person-plus me-2"></i>Register
+                    </button>
+                </form>
+
+                <div class="divider">
+                    <span>Already have an account?</span>
+                </div>
+
+                <div class="text-center">
+                    <a href="@Url.Action("Login", "Student")" class="link-text">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Login Here
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="back-home">
+            <a href="@Url.Action("Index", "Home")">
+                <i class="bi bi-arrow-left me-2"></i>Back to Home
+            </a>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Email validation
+        const emailInput = document.getElementById('email');
+        
+        emailInput.addEventListener('input', function(e) {
+            const email = e.target.value;
+            if (email) {
+                if (email.endsWith('@@student.uet.edu.pk')) {
+                    e.target.classList.remove('is-invalid');
+                    e.target.classList.add('is-valid');
+                    e.target.setCustomValidity('');
+                } else {
+                    e.target.classList.remove('is-valid');
+                    e.target.classList.add('is-invalid');
+                    e.target.setCustomValidity('Email must end with @@student.uet.edu.pk');
+                }
+            } else {
+                e.target.classList.remove('is-valid', 'is-invalid');
+                e.target.setCustomValidity('');
+            }
+        });
+        
+        // Name validation
+        const nameInput = document.getElementById('name');
+        
+        nameInput.addEventListener('input', function(e) {
+            const name = e.target.value;
+            if (name.length >= 3) {
+                e.target.classList.remove('is-invalid');
+                e.target.classList.add('is-valid');
+            } else if (name.length > 0) {
+                e.target.classList.remove('is-valid');
+                e.target.classList.add('is-invalid');
+            } else {
+                e.target.classList.remove('is-valid', 'is-invalid');
+            }
+        });
+    </script>
+</body>
+</html>

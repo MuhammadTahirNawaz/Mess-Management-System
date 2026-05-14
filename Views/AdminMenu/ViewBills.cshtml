@@ -1,0 +1,101 @@
+@model IEnumerable<dynamic>
+@{
+    ViewData["Title"] = "Student Bills";
+    var billsList = Model.ToList();
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary mb-4"><i class="bi bi-receipt me-2"></i>Student Bills Summary</h2>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm bg-danger text-white">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-cash-stack me-2"></i>Total Unpaid</h6>
+                    <h3 class="mb-0">PKR @billsList.Sum(b => (decimal)b.TotalAmount).ToString("N2")</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm bg-info text-white">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-people me-2"></i>Students with Bills</h6>
+                    <h3 class="mb-0">@billsList.Count</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm bg-warning text-dark">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-calendar-check me-2"></i>Total Unpaid Meals</h6>
+                    <h3 class="mb-0">@billsList.Sum(b => (int)b.TotalMeals)</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            @if (billsList.Count == 0)
+            {
+                <div class="alert alert-success">
+                    <i class="bi bi-check-circle me-2"></i>Excellent! All bills have been paid. No outstanding balances.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>#</th>
+                                <th>Permanent ID</th>
+                                <th>Student Name</th>
+                                <th>Email</th>
+                                <th>Unpaid Meals</th>
+                                <th>Total Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var bill in billsList.Select((b, index) => new { Bill = b, Index = index + 1 }))
+                            {
+                                <tr>
+                                    <td>@bill.Index</td>
+                                    <td><strong class="text-primary">@bill.Bill.PermanentID</strong></td>
+                                    <td><strong>@bill.Bill.StudentName</strong></td>
+                                    <td>@bill.Bill.StudentEmail</td>
+                                    <td class="text-center">
+                                        <span class="badge bg-warning">@bill.Bill.TotalMeals meals</span>
+                                    </td>
+                                    <td>
+                                        <strong class="text-danger fs-5">PKR @bill.Bill.TotalAmount.ToString("N2")</strong>
+                                    </td>
+                                    <td>
+                                        <a asp-action="StudentBillDetails" asp-route-id="@bill.Bill.StudentId" 
+                                           class="btn btn-sm btn-primary">
+                                            <i class="bi bi-eye me-1"></i>View Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-light">
+                                <td colspan="4" class="text-end"><strong>Grand Total:</strong></td>
+                                <td class="text-center">
+                                    <strong class="badge bg-warning">@billsList.Sum(b => (int)b.TotalMeals) meals</strong>
+                                </td>
+                                <td>
+                                    <strong class="text-danger fs-5">PKR @billsList.Sum(b => (decimal)b.TotalAmount).ToString("N2")</strong>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
