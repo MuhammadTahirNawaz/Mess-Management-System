@@ -49,19 +49,6 @@ A modern Mess Management System built with ASP.NET Core MVC featuring digital ID
 - **Detailed History**: View individual student's attendance and billing history
 - **Payment Status**: Track paid/unpaid status for each attendance
 
-## Application URLs
-
-- **Base URL**: http://localhost:5242
-- **Admin Login**: http://localhost:5242/Admin/Login
-- **Admin Dashboard**: http://localhost:5242/Admin/Dashboard
-- **Student Registration**: http://localhost:5242/Student/Register
-- **Student Login**: http://localhost:5242/Student/Login
-- **Digital ID Card**: http://localhost:5242/Student/DigitalCard
-- **Menu Management**: http://localhost:5242/AdminMenu/MenuManagement
-- **Student Check-In**: http://localhost:5242/AdminMenu/CheckIn
-- **View Students**: http://localhost:5242/AdminMenu/ViewStudents
-- **View Bills**: http://localhost:5242/AdminMenu/ViewBills
-
 ## Database Structure
 
 ### Tables Created:
@@ -72,14 +59,7 @@ A modern Mess Management System built with ASP.NET Core MVC featuring digital ID
 
 ### Database: MessManagementDB (SQL Server LocalDB)
 
-## Email Configuration
 
-**SMTP Settings (Gmail)**:
-- Sender: tahirnawaz12194@gmail.com
-- App Password: qqyk usmp gyir rfwy
-- SMTP Server: smtp.gmail.com
-- Port: 587
-- SSL: Enabled
 
 ## Admin Dashboard Features
 
@@ -92,7 +72,7 @@ A modern Mess Management System built with ASP.NET Core MVC featuring digital ID
 ## Usage Flow
 
 ### Admin Workflow:
-1. Login with tahirnawaz12194@gmail.com
+1. Login with admin email
 2. Receive OTP via email (first time)
 3. Verify OTP and set password
 4. Access Admin Dashboard
